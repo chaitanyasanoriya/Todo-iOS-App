@@ -11,63 +11,24 @@ import UIKit
 class NotesListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var mTableView: UITableView!
-    var mHeaderView: UIView!
-    var mNewHeaderLayer: CAShapeLayer!
+    var mNavigationBarBackgroundImage: UIImage!
+    var mNavigationBarShadowImage: UIImage!
+    var mNavigationBarIsTranslucent: Bool!
+    var mNavigationBarTintColor: UIColor!
     
-    private let mHeaderHeight: CGFloat = 420
-    private let mHeaderCut: CGFloat = 50
+    var mSelectedCategory: Categories?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.updateView()
-        // Do any additional setup after loading the view.
+        self.addNewView()
     }
-
-    func updateView()
+    
+    func addNewView()
     {
-        mTableView.backgroundColor = .white
-        mHeaderView = mTableView.tableHeaderView
-        mTableView.tableHeaderView = nil
-        mTableView.rowHeight = UITableView.automaticDimension
-        mTableView.addSubview(mHeaderView)
-        
-        mNewHeaderLayer = CAShapeLayer()
-        mNewHeaderLayer.fillColor = UIColor.black.cgColor
-        mHeaderView.layer.mask = mNewHeaderLayer
-        
-        let newHeight = mHeaderHeight - mHeaderCut / 2
-        mTableView.contentInset = UIEdgeInsets(top: newHeight, left: 0, bottom: 0, right: 0)
-        mTableView.contentOffset = CGPoint(x: 0, y: -newHeight)
-        
-        self.setupNewView()
-    }
-    
-    func setupNewView()
-    {
-        let newheight = mHeaderHeight - mHeaderCut / 2
-        var getheaderframe = CGRect(x: 0, y: -newheight, width: mTableView.bounds.width, height: mHeaderHeight)
-        
-        if mTableView.contentOffset.y < newheight
-        {
-            getheaderframe.origin.y = mTableView.contentOffset.y
-            getheaderframe.size.height = -mTableView.contentOffset.y + mHeaderCut / 2
-        }
-        
-        mHeaderView.frame = getheaderframe
-        let cutdirection = UIBezierPath()
-        cutdirection.move(to: CGPoint(x: 0, y: 0))
-        cutdirection.addLine(to: CGPoint(x: getheaderframe.width, y: 0))
-        cutdirection.addLine(to: CGPoint(x: getheaderframe.width, y: getheaderframe.height))
-        cutdirection.addLine(to: CGPoint(x: 0, y: getheaderframe.height - mHeaderCut))
-        mNewHeaderLayer.path = cutdirection.cgPath
-    }
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.mTableView.decelerationRate = UIScrollView.DecelerationRate.fast
-    }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        self.setupNewView()
+        let headerView = StretchyTableHeaderView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 250))
+        // Image from unsplash: https://unsplash.com/photos/iVPWGCbFwd8
+        headerView.imageView.image = UIImage(named: "header")
+        self.mTableView.tableHeaderView = headerView
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -85,20 +46,52 @@ class NotesListViewController: UIViewController, UITableViewDataSource, UITableV
             cell = UITableViewCell(style: .value1, reuseIdentifier: "categoryCell")
         }
         cell?.textLabel?.text = "hello"
-//        cell?.textLabel?.text = mCategories[indexPath.row].category
-//        cell?.detailTextLabel?.text = String(mCategories[indexPath.row].notes?.count ?? 0)
+        //        cell?.textLabel?.text = mCategories[indexPath.row].category
+        //        cell?.detailTextLabel?.text = String(mCategories[indexPath.row].notes?.count ?? 0)
         return cell!
     }
     
-
+    
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // Make sure the top constraint of the TableView/CollectionView/ScrollView is equal to Superview and not Safe Area
+        mNavigationBarBackgroundImage = self.navigationController?.navigationBar.backgroundImage(for: .default)
+        mNavigationBarShadowImage = self.navigationController?.navigationBar.shadowImage
+        mNavigationBarIsTranslucent = self.navigationController?.navigationBar.isTranslucent
+        mNavigationBarTintColor = self.navigationController?.navigationBar.tintColor
+        // Make the Navigation Bar background transparent
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.navigationBar.tintColor = .white
+        
+        // Remove 'Back' text and Title from Navigation Bar
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
     }
-    */
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.navigationController?.navigationBar.setBackgroundImage(mNavigationBarBackgroundImage, for: .default)
+        self.navigationController?.navigationBar.shadowImage = mNavigationBarShadowImage
+        self.navigationController?.navigationBar.isTranslucent = mNavigationBarIsTranslucent
+        self.navigationController?.navigationBar.tintColor = mNavigationBarTintColor
+    }
+    
+}
 
+extension NotesListViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let headerView = self.mTableView.tableHeaderView as! StretchyTableHeaderView
+        headerView.scrollViewDidScroll(scrollView: scrollView)
+    }
 }
