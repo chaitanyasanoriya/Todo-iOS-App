@@ -12,7 +12,6 @@ import CoreData
 class ViewController: UITableViewController {
     
     var mCategories = [Categories]()
-    var mNotes = [Notes]()
     
     // create a context
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -25,15 +24,6 @@ class ViewController: UITableViewController {
     
     func loadCategories()
     {
-        
-        let request1: NSFetchRequest<Notes> = Notes.fetchRequest()
-        do {
-            mNotes = try context.fetch(request1)
-        } catch {
-            print("Error loading folders \(error.localizedDescription)")
-        }
-        
-        
         let request: NSFetchRequest<Categories> = Categories.fetchRequest()
         do {
             mCategories = try context.fetch(request)
@@ -67,21 +57,8 @@ class ViewController: UITableViewController {
             cell = UITableViewCell(style: .value1, reuseIdentifier: "categoryCell")
         }
         cell?.textLabel?.text = mCategories[indexPath.row].category
-        cell?.detailTextLabel?.text = getNumberOfNotes(category: mCategories[indexPath.row])
+        cell?.detailTextLabel?.text = String(mCategories[indexPath.row].notes?.count ?? 0)
         return cell!
-    }
-    
-    private func getNumberOfNotes(category: Categories) -> String
-    {
-        var num = 0
-        for note in mNotes
-        {
-            if note.parentFolder == category
-            {
-                num += 1
-            }
-        }
-        return "\(num)"
     }
     
     @IBAction func addTapped(_ sender: Any) {
@@ -116,6 +93,10 @@ class ViewController: UITableViewController {
         okAction.setValue(UIColor.orange, forKey: "titleTextColor")
         alert.addAction(okAction)
         present(alert, animated: true, completion: nil)
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "toNotesList", sender: self)
     }
 }
 

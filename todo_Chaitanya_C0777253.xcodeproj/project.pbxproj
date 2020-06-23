@@ -14,6 +14,7 @@
 		9001D1E324A1455E00A7C419 /* todo_Chaitanya_C0777253.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9001D1E124A1455E00A7C419 /* todo_Chaitanya_C0777253.xcdatamodeld */; };
 		9001D1E524A1456000A7C419 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9001D1E424A1456000A7C419 /* Assets.xcassets */; };
 		9001D1E824A1456000A7C419 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9001D1E624A1456000A7C419 /* LaunchScreen.storyboard */; };
+		90151EAE24A1AD9600AAFAB0 /* NotesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90151EAD24A1AD9600AAFAB0 /* NotesListViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		9001D1E424A1456000A7C419 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9001D1E724A1456000A7C419 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9001D1E924A1456000A7C419 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		90151EAD24A1AD9600AAFAB0 /* NotesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesListViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 				9001D1E624A1456000A7C419 /* LaunchScreen.storyboard */,
 				9001D1E924A1456000A7C419 /* Info.plist */,
 				9001D1E124A1455E00A7C419 /* todo_Chaitanya_C0777253.xcdatamodeld */,
+				90151EAD24A1AD9600AAFAB0 /* NotesListViewController.swift */,
 			);
 			path = todo_Chaitanya_C0777253;
 			sourceTree = "<group>";
@@ -143,6 +146,7 @@
 			files = (
 				9001D1E324A1455E00A7C419 /* todo_Chaitanya_C0777253.xcdatamodeld in Sources */,
 				9001D1DD24A1455E00A7C419 /* ViewController.swift in Sources */,
+				90151EAE24A1AD9600AAFAB0 /* NotesListViewController.swift in Sources */,
 				9001D1D924A1455E00A7C419 /* AppDelegate.swift in Sources */,
 				9001D1DB24A1455E00A7C419 /* SceneDelegate.swift in Sources */,
 			);

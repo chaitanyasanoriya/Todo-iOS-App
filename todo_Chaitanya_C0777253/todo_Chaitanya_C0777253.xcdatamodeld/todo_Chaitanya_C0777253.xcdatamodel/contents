@@ -7,11 +7,12 @@
     <entity name="Notes" representedClassName="Notes" syncable="YES" codeGenerationType="class">
         <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="desc" optional="YES" attributeType="String"/>
+        <attribute name="remindme" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="title" attributeType="String"/>
         <relationship name="parentFolder" maxCount="1" deletionRule="No Action" destinationEntity="Categories" inverseName="notes" inverseEntity="Categories"/>
     </entity>
     <elements>
         <element name="Categories" positionX="-63" positionY="-18" width="128" height="73"/>
-        <element name="Notes" positionX="-54" positionY="0" width="128" height="103"/>
+        <element name="Notes" positionX="-54" positionY="0" width="128" height="118"/>
     </elements>
 </model>
