@@ -2,17 +2,18 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19F101" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Categories" representedClassName="Categories" syncable="YES" codeGenerationType="class">
         <attribute name="category" attributeType="String"/>
-        <relationship name="notes" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Notes" inverseName="parentFolder" inverseEntity="Notes"/>
+        <relationship name="notes" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Notes" inverseName="parentCategory" inverseEntity="Notes"/>
     </entity>
     <entity name="Notes" representedClassName="Notes" syncable="YES" codeGenerationType="class">
+        <attribute name="completed" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="desc" optional="YES" attributeType="String"/>
         <attribute name="remindme" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="title" attributeType="String"/>
-        <relationship name="parentFolder" maxCount="1" deletionRule="No Action" destinationEntity="Categories" inverseName="notes" inverseEntity="Categories"/>
+        <relationship name="parentCategory" maxCount="1" deletionRule="No Action" destinationEntity="Categories" inverseName="notes" inverseEntity="Categories"/>
     </entity>
     <elements>
         <element name="Categories" positionX="-63" positionY="-18" width="128" height="73"/>
-        <element name="Notes" positionX="-54" positionY="0" width="128" height="118"/>
+        <element name="Notes" positionX="-54" positionY="0" width="128" height="133"/>
     </elements>
 </model>

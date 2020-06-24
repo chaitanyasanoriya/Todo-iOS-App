@@ -54,21 +54,28 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="df8-jN-8Eg">
-                                <rect key="frame" x="186" y="874" width="42" height="22"/>
+                                <rect key="frame" x="186" y="835.5" width="42" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DSX-wR-yVn">
-                                <rect key="frame" x="373" y="874" width="21" height="22"/>
+                                <rect key="frame" x="373.5" y="834" width="20.5" height="22"/>
                                 <state key="normal" image="square.and.pencil" catalog="system"/>
+                                <connections>
+                                    <action selector="newNoteTapped:" destination="Rsi-8I-aPb" eventType="touchUpInside" id="fxd-eR-MKf"/>
+                                </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AQD-Xe-5Z9">
-                                <rect key="frame" x="20" y="866" width="58" height="30"/>
-                                <state key="normal" title="Move To"/>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dlo-kB-eFN">
+                                <rect key="frame" x="314" y="834" width="19.5" height="22"/>
+                                <color key="tintColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" image="trash" catalog="system"/>
+                                <connections>
+                                    <action selector="mDeleteButtontapped:" destination="Rsi-8I-aPb" eventType="touchUpInside" id="Xdt-xX-kQ0"/>
+                                </connections>
                             </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="never" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="7KU-wq-Cot">
-                                <rect key="frame" x="0.0" y="0.0" width="424" height="858"/>
+                                <rect key="frame" x="0.0" y="0.0" width="424" height="826"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="bMv-Pg-Q7C">
                                     <rect key="frame" x="0.0" y="0.0" width="424" height="420"/>
@@ -101,26 +108,41 @@
                                     <outlet property="delegate" destination="Rsi-8I-aPb" id="6j1-91-Vzb"/>
                                 </connections>
                             </tableView>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AQD-Xe-5Z9">
+                                <rect key="frame" x="20" y="826" width="58" height="30"/>
+                                <state key="normal" title="Move To"/>
+                                <connections>
+                                    <action selector="moveToTapped:" destination="Rsi-8I-aPb" eventType="touchUpInside" id="IhY-9t-2Jp"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="df8-jN-8Eg" firstAttribute="centerX" secondItem="kpw-0a-mhb" secondAttribute="centerX" id="3aA-jM-fvW"/>
-                            <constraint firstItem="DSX-wR-yVn" firstAttribute="centerY" secondItem="df8-jN-8Eg" secondAttribute="centerY" id="Ac1-Qd-f11"/>
+                            <constraint firstItem="AQD-Xe-5Z9" firstAttribute="top" secondItem="7KU-wq-Cot" secondAttribute="bottom" id="7HY-m8-LMa"/>
+                            <constraint firstItem="DSX-wR-yVn" firstAttribute="leading" secondItem="Dlo-kB-eFN" secondAttribute="trailing" constant="40" id="D1G-rL-qhh"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="df8-jN-8Eg" secondAttribute="bottom" constant="40" id="E8a-uF-edn"/>
+                            <constraint firstItem="df8-jN-8Eg" firstAttribute="centerX" secondItem="kpw-0a-mhb" secondAttribute="centerX" id="IvJ-46-HVc"/>
                             <constraint firstAttribute="trailingMargin" secondItem="7KU-wq-Cot" secondAttribute="trailing" constant="-30" id="JOO-SQ-OOP"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="AQD-Xe-5Z9" secondAttribute="bottom" constant="40" id="MwA-Ke-5pS"/>
                             <constraint firstItem="7KU-wq-Cot" firstAttribute="top" secondItem="kpw-0a-mhb" secondAttribute="top" id="NjX-0F-nOt"/>
-                            <constraint firstItem="DSX-wR-yVn" firstAttribute="trailing" secondItem="kpw-0a-mhb" secondAttribute="trailingMargin" id="NpU-zk-DdH"/>
-                            <constraint firstItem="DSX-wR-yVn" firstAttribute="bottom" secondItem="df8-jN-8Eg" secondAttribute="bottom" id="PZf-OP-s7e"/>
-                            <constraint firstItem="AQD-Xe-5Z9" firstAttribute="bottom" secondItem="df8-jN-8Eg" secondAttribute="bottom" id="hUC-el-02T"/>
-                            <constraint firstItem="AQD-Xe-5Z9" firstAttribute="leading" secondItem="kpw-0a-mhb" secondAttribute="leadingMargin" id="n3k-ML-9Vw"/>
+                            <constraint firstAttribute="bottom" secondItem="Dlo-kB-eFN" secondAttribute="bottom" constant="40" id="YuM-FD-gPR"/>
                             <constraint firstItem="7KU-wq-Cot" firstAttribute="leading" secondItem="kpw-0a-mhb" secondAttribute="leading" id="nil-M1-J0r"/>
-                            <constraint firstItem="AQD-Xe-5Z9" firstAttribute="top" secondItem="7KU-wq-Cot" secondAttribute="bottom" constant="8" id="oDF-jy-tYr"/>
-                            <constraint firstItem="df8-jN-8Eg" firstAttribute="bottom" secondItem="kpw-0a-mhb" secondAttribute="bottom" id="oza-Su-gZt"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="DSX-wR-yVn" secondAttribute="trailing" id="vyC-7T-Yxj"/>
+                            <constraint firstAttribute="bottom" secondItem="DSX-wR-yVn" secondAttribute="bottom" constant="40" id="xdI-8v-sl2"/>
+                            <constraint firstItem="AQD-Xe-5Z9" firstAttribute="leading" secondItem="kpw-0a-mhb" secondAttribute="leadingMargin" id="yoj-UU-qSS"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Todo" largeTitleDisplayMode="always" id="wh3-Ly-EMk">
-                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="4Ee-mz-s9a"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="4Ee-mz-s9a">
+                            <connections>
+                                <action selector="mEditButtonTapped:" destination="Rsi-8I-aPb" id="wee-9x-kFs"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="mDeleteButton" destination="Dlo-kB-eFN" id="W83-62-yfZ"/>
+                        <outlet property="mLabel" destination="df8-jN-8Eg" id="dTF-k7-rRM"/>
+                        <outlet property="mMoveToButton" destination="AQD-Xe-5Z9" id="cAJ-id-A4Q"/>
                         <outlet property="mTableView" destination="7KU-wq-Cot" id="fno-dj-Tiy"/>
                         <segue destination="lTd-zq-Imz" kind="show" id="OfE-qI-xs8"/>
                     </connections>
@@ -149,8 +171,8 @@
         <scene sceneID="xx8-ty-BHQ">
             <objects>
                 <navigationController id="iLL-O1-lsZ" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Zis-M9-u8c">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="Zis-M9-u8c">
+                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </navigationBar>
@@ -166,5 +188,6 @@
     <resources>
         <image name="header" width="5120" height="3200"/>
         <image name="square.and.pencil" catalog="system" width="128" height="118"/>
+        <image name="trash" catalog="system" width="121" height="128"/>
     </resources>
 </document>

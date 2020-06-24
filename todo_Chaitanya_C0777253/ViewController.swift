@@ -12,6 +12,7 @@ import CoreData
 class ViewController: UITableViewController {
     
     var mCategories = [Categories]()
+    var mIndex: Int?
     
     // create a context
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -96,7 +97,19 @@ class ViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        mIndex = indexPath.row
         performSegue(withIdentifier: "toNotesList", sender: self)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        mIndex = nil
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toNotesList", let nlvc = segue.destination as? NotesListViewController
+        {
+            nlvc.mSelectedCategory = mCategories[mIndex!]
+        }
     }
 }
 

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class NotesListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
@@ -15,18 +16,44 @@ class NotesListViewController: UIViewController, UITableViewDataSource, UITableV
     var mNavigationBarShadowImage: UIImage!
     var mNavigationBarIsTranslucent: Bool!
     var mNavigationBarTintColor: UIColor!
+    var mNotes = [Notes]()
+    let mContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    @IBOutlet weak var mMoveToButton: UIButton!
+    let mCurrentDate: Date = Date()
+    @IBOutlet weak var mLabel: UILabel!
+    @IBOutlet weak var mDeleteButton: UIButton!
     
     var mSelectedCategory: Categories?
+    {
+        didSet
+        {
+            self.title = mSelectedCategory?.category
+            loadNotes()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.addNewView()
+        setNumberOfNotes()
+        mTableView.allowsMultipleSelectionDuringEditing = true
+    }
+    
+    func setNumberOfNotes()
+    {
+        if mSelectedCategory?.notes?.count == 1
+        {
+            mLabel.text = "1 note"
+        }
+        else
+        {
+            mLabel.text = "\(mSelectedCategory?.notes?.count ?? 0) notes"
+        }
     }
     
     func addNewView()
     {
         let headerView = StretchyTableHeaderView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 250))
-        // Image from unsplash: https://unsplash.com/photos/iVPWGCbFwd8
         headerView.imageView.image = UIImage(named: "header")
         self.mTableView.tableHeaderView = headerView
     }
@@ -36,19 +63,57 @@ class NotesListViewController: UIViewController, UITableViewDataSource, UITableV
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 20
+//        return mNotes.count
+        return 5
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell")
         if cell == nil
         {
-            cell = UITableViewCell(style: .value1, reuseIdentifier: "categoryCell")
+            cell = UITableViewCell(style: .subtitle, reuseIdentifier: "categoryCell")
         }
+//        cell?.textLabel?.text = mNotes[indexPath.row].title
+//        cell?.detailTextLabel?.text = mNotes[indexPath.row].desc
+//        if  let date = mNotes[indexPath.row].date
+//        {
+//            if date >= mCurrentDate
+//            {
+//                cell?.backgroundColor = .red
+//            }
+//            if date < mCurrentDate, Calendar.current.date(byAdding: .day, value: -2, to: mCurrentDate)! < date
+//            {
+//                cell?.backgroundColor = .green
+//            }
+//        }
+//        else
+//        {
+//            cell?.backgroundColor = .white
+//        }
         cell?.textLabel?.text = "hello"
-        //        cell?.textLabel?.text = mCategories[indexPath.row].category
-        //        cell?.detailTextLabel?.text = String(mCategories[indexPath.row].notes?.count ?? 0)
+        cell?.detailTextLabel?.text = "hello"
+//        let button = UIButton(type: .contactAdd)
+//        button.tag = indexPath.row
+//        button.addTarget(self, action: #selector(pressed(sender:)), for: .touchUpInside)
+//        cell?.accessoryView = button
         return cell!
+    }
+    
+//    @objc func pressed(sender: UIButton!) {
+//        print(sender.tag)
+//    }
+    
+    func loadNotes() {
+        let request: NSFetchRequest<Notes> = Notes.fetchRequest()
+        let categoryPredicate = NSPredicate(format: "parentCategory.category=%@", mSelectedCategory!.category!)
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        request.predicate = categoryPredicate
+
+        do {
+            mNotes = try mContext.fetch(request)
+        } catch {
+            print("Error loading notes \(error.localizedDescription)")
+        }
     }
     
     
@@ -77,7 +142,7 @@ class NotesListViewController: UIViewController, UITableViewDataSource, UITableV
         
         // Remove 'Back' text and Title from Navigation Bar
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        self.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -87,6 +152,62 @@ class NotesListViewController: UIViewController, UITableViewDataSource, UITableV
         self.navigationController?.navigationBar.tintColor = mNavigationBarTintColor
     }
     
+    @IBAction func newNoteTapped(_ sender: Any) {
+    }
+    
+    @IBAction func moveToTapped(_ sender: Any) {
+    }
+    
+    @IBAction func mEditButtonTapped(_ sender: Any) {
+        if mTableView.isEditing
+        {
+            mTableView.setEditing(false, animated: true)
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: "mEditButtonTapped:")
+            mMoveToButton.isHidden = true
+            mDeleteButton.isHidden = true
+        }
+        else
+        {
+            mTableView.setEditing(true, animated: true)
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: "mEditButtonTapped:")
+            mMoveToButton.isHidden = false
+            mDeleteButton.isHidden = false
+        }
+    }
+    
+    @IBAction func mDeleteButtontapped(_ sender: Any) {
+        let alert = UIAlertController(title: "Are you sure you want to delete?", message: nil, preferredStyle: .alert)
+        let cancel_button = UIAlertAction(title: "Cancel", style: .cancel) { (UIAlertAction) in
+            alert.dismiss(animated: true, completion: nil)
+        }
+        let delete_button = UIAlertAction(title: "Delete", style: .destructive) { (UIAlertAction) in
+            if let rows = self.mTableView.indexPathsForSelectedRows
+            {
+                self.mTableView.deleteRows(at: rows, with: .left)
+                for indexpath in rows.reversed()
+                {
+                    self.mNotes.remove(at: indexpath.row)
+                }
+                self.save()
+            }
+            alert.dismiss(animated: true, completion: nil)
+        }
+        
+        alert.addAction(cancel_button)
+        alert.addAction(delete_button)
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func save() {
+        do {
+            try mContext.save()
+            loadNotes()
+            mTableView.reloadData()
+        } catch {
+            print("Error saving folders \(error.localizedDescription)")
+        }
+    }
 }
 
 extension NotesListViewController: UIScrollViewDelegate {
