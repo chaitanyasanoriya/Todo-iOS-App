@@ -16,16 +16,19 @@ class ViewController: UITableViewController {
     
     // create a context
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    let mSearchController = UISearchController(searchResultsController: nil)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         loadCategories()
+        showSearchBar()
     }
     
     func loadCategories()
     {
         let request: NSFetchRequest<Categories> = Categories.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(key: "category", ascending: true)]
         do {
             mCategories = try context.fetch(request)
         } catch {
@@ -43,13 +46,13 @@ class ViewController: UITableViewController {
             print("Error saving folders \(error.localizedDescription)")
         }
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return mCategories.count
-//        return 2
+        //        return 2
     }
-
+    
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell")
@@ -109,6 +112,48 @@ class ViewController: UITableViewController {
         if segue.identifier == "toNotesList", let nlvc = segue.destination as? NotesListViewController
         {
             nlvc.mSelectedCategory = mCategories[mIndex!]
+        }
+    }
+    
+    func showSearchBar() {
+        
+        mSearchController.obscuresBackgroundDuringPresentation = false
+        mSearchController.searchBar.placeholder = "Search Categories"
+        navigationItem.searchController = mSearchController
+        mSearchController.searchBar.delegate = self
+        definesPresentationContext = true
+    }
+    
+    func loadCategories(with request: NSFetchRequest<Categories> = Categories.fetchRequest(), predicate: NSPredicate? = nil) {
+        request.predicate = predicate
+        request.sortDescriptors = [NSSortDescriptor(key: "category", ascending: true)]
+        do {
+            mCategories = try context.fetch(request)
+        } catch {
+            print("Error loading notes \(error.localizedDescription)")
+        }
+        
+        tableView.reloadData()
+    }
+}
+
+extension ViewController: UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        let predicate = NSPredicate(format: "category CONTAINS[cd] %@", searchBar.text!)
+        loadCategories(predicate: predicate)
+        
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        print(searchText)
+        if searchBar.text?.count == 0
+        {
+            loadCategories()
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+            
         }
     }
 }
