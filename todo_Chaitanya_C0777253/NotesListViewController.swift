@@ -9,7 +9,13 @@
 import UIKit
 import CoreData
 
-class NotesListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+protocol NoteCallBack {
+    func NoteAddCallBack(title: String, description: String, due: Date?, remindme: Bool)
+    func NoteUpdateCallBack(note: Notes)
+}
+
+class NotesListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
+    
     
     @IBOutlet weak var mTableView: UITableView!
     var mNavigationBarShadowImage: UIImage!
@@ -156,9 +162,6 @@ class NotesListViewController: UIViewController, UITableViewDataSource, UITableV
         
     }
     
-    @IBAction func newNoteTapped(_ sender: Any) {
-    }
-    
     @IBAction func moveToTapped(_ sender: Any) {
     }
     
@@ -235,6 +238,10 @@ class NotesListViewController: UIViewController, UITableViewDataSource, UITableV
         mSearchController.searchBar.delegate = self
         definesPresentationContext = true
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "NoteDetails", sender: self)
+    }
 }
 
 extension NotesListViewController: UIScrollViewDelegate {
@@ -272,5 +279,16 @@ extension NotesListViewController: UISearchBarDelegate {
             }
             
         }
+    }
+}
+
+extension NotesListViewController: NoteCallBack
+{
+    func NoteAddCallBack(title: String, description: String, due: Date?, remindme: Bool) {
+        <#code#>
+    }
+    
+    func NoteUpdateCallBack(note: Notes) {
+        <#code#>
     }
 }

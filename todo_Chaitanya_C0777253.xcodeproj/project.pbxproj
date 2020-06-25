@@ -16,6 +16,7 @@
 		9001D1E824A1456000A7C419 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9001D1E624A1456000A7C419 /* LaunchScreen.storyboard */; };
 		90151EAE24A1AD9600AAFAB0 /* NotesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90151EAD24A1AD9600AAFAB0 /* NotesListViewController.swift */; };
 		9055CF9724A280000089251C /* StretchyTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9055CF9624A280000089251C /* StretchyTableHeaderView.swift */; };
+		90F66C0124A3D586000C7CFD /* NoteDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90F66C0024A3D586000C7CFD /* NoteDetailsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		9001D1E924A1456000A7C419 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		90151EAD24A1AD9600AAFAB0 /* NotesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesListViewController.swift; sourceTree = "<group>"; };
 		9055CF9624A280000089251C /* StretchyTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StretchyTableHeaderView.swift; sourceTree = "<group>"; };
+		90F66C0024A3D586000C7CFD /* NoteDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDetailsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +74,7 @@
 				9001D1E124A1455E00A7C419 /* todo_Chaitanya_C0777253.xcdatamodeld */,
 				90151EAD24A1AD9600AAFAB0 /* NotesListViewController.swift */,
 				9055CF9624A280000089251C /* StretchyTableHeaderView.swift */,
+				90F66C0024A3D586000C7CFD /* NoteDetailsViewController.swift */,
 			);
 			path = todo_Chaitanya_C0777253;
 			sourceTree = "<group>";
@@ -152,6 +155,7 @@
 				9001D1DD24A1455E00A7C419 /* ViewController.swift in Sources */,
 				90151EAE24A1AD9600AAFAB0 /* NotesListViewController.swift in Sources */,
 				9001D1D924A1455E00A7C419 /* AppDelegate.swift in Sources */,
+				90F66C0124A3D586000C7CFD /* NoteDetailsViewController.swift in Sources */,
 				9001D1DB24A1455E00A7C419 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

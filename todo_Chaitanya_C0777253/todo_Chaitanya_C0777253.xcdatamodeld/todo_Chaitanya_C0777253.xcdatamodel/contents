@@ -6,6 +6,7 @@
     </entity>
     <entity name="Notes" representedClassName="Notes" syncable="YES" codeGenerationType="class">
         <attribute name="completed" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="created_date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="desc" optional="YES" attributeType="String"/>
         <attribute name="remindme" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
@@ -14,6 +15,6 @@
     </entity>
     <elements>
         <element name="Categories" positionX="-63" positionY="-18" width="128" height="73"/>
-        <element name="Notes" positionX="-54" positionY="0" width="128" height="133"/>
+        <element name="Notes" positionX="-54" positionY="0" width="128" height="148"/>
     </elements>
 </model>
