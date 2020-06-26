@@ -17,6 +17,7 @@
 		90151EAE24A1AD9600AAFAB0 /* NotesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90151EAD24A1AD9600AAFAB0 /* NotesListViewController.swift */; };
 		9055CF9724A280000089251C /* StretchyTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9055CF9624A280000089251C /* StretchyTableHeaderView.swift */; };
 		90F66C0124A3D586000C7CFD /* NoteDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90F66C0024A3D586000C7CFD /* NoteDetailsViewController.swift */; };
+		90F66C2324A64C83000C7CFD /* MoveToViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90F66C2224A64C83000C7CFD /* MoveToViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		90151EAD24A1AD9600AAFAB0 /* NotesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesListViewController.swift; sourceTree = "<group>"; };
 		9055CF9624A280000089251C /* StretchyTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StretchyTableHeaderView.swift; sourceTree = "<group>"; };
 		90F66C0024A3D586000C7CFD /* NoteDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDetailsViewController.swift; sourceTree = "<group>"; };
+		90F66C2224A64C83000C7CFD /* MoveToViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveToViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +77,7 @@
 				90151EAD24A1AD9600AAFAB0 /* NotesListViewController.swift */,
 				9055CF9624A280000089251C /* StretchyTableHeaderView.swift */,
 				90F66C0024A3D586000C7CFD /* NoteDetailsViewController.swift */,
+				90F66C2224A64C83000C7CFD /* MoveToViewController.swift */,
 			);
 			path = todo_Chaitanya_C0777253;
 			sourceTree = "<group>";
@@ -156,6 +159,7 @@
 				90151EAE24A1AD9600AAFAB0 /* NotesListViewController.swift in Sources */,
 				9001D1D924A1455E00A7C419 /* AppDelegate.swift in Sources */,
 				90F66C0124A3D586000C7CFD /* NoteDetailsViewController.swift in Sources */,
+				90F66C2324A64C83000C7CFD /* MoveToViewController.swift in Sources */,
 				9001D1DB24A1455E00A7C419 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

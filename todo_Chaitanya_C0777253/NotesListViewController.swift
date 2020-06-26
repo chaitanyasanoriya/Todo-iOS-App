@@ -15,6 +15,10 @@ protocol NoteCallBack {
     func deleteNote(note: Notes)
 }
 
+protocol NoteMove {
+    func moveNotes(to category: Categories)
+}
+
 class NotesListViewController: UIViewController{
     
     
@@ -33,6 +37,7 @@ class NotesListViewController: UIViewController{
     let mSearchController = UISearchController(searchResultsController: nil)
     var mSelectedNote: Notes?
     var mIsEditing: Bool = false
+    var mSelectedNotes = [Notes]()
     
     var mSelectedCategory: Categories?
     {
@@ -135,6 +140,11 @@ class NotesListViewController: UIViewController{
                 ndvc.mSelectedNote = mSelectedNote
             }
         }
+        if let mtvc = segue.destination as? MoveToViewController
+        {
+            mtvc.mNoteMove = self
+            mtvc.mOriginalCategory = mSelectedCategory
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -170,6 +180,22 @@ class NotesListViewController: UIViewController{
     }
     
     @IBAction func moveToTapped(_ sender: Any) {
+        mSelectedNotes.removeAll()
+        if let indexes = mTableView.indexPathsForSelectedRows
+        {
+            for index in indexes
+            {
+                if index.section == 0
+                {
+                    mSelectedNotes.append(mNotes[index.row])
+                }
+                else
+                {
+                    mSelectedNotes.append(mCompletedNotes[index.row])
+                }
+            }
+            self.performSegue(withIdentifier: "moveTo", sender: self)
+        }
     }
     
     @IBAction func mEditButtonTapped(_ sender: Any) {
@@ -280,6 +306,14 @@ extension NotesListViewController: UISearchBarDelegate {
             }
             mTableView.reloadData()
         }
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        loadNotes()
+        DispatchQueue.main.async {
+            searchBar.resignFirstResponder()
+        }
+        mTableView.reloadData()
     }
 }
 
@@ -407,5 +441,35 @@ extension NotesListViewController:  UITableViewDataSource, UITableViewDelegate
             save()
             tableView.reloadData()
         }
+    }
+    
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let moveNote = UIContextualAction(style: .normal, title: "Move") { (action, view, completion) in
+            self.mSelectedNotes.removeAll()
+            if indexPath.section == 0
+            {
+                self.mSelectedNotes.append(self.mNotes[indexPath.row])
+            }
+            else
+            {
+                self.mSelectedNotes.append(self.mCompletedNotes[indexPath.row])
+            }
+            self.performSegue(withIdentifier: "moveTo", sender: self)
+            completion(true)
+        }
+        moveNote.backgroundColor = #colorLiteral(red: 0.7254902124, green: 0.4784313738, blue: 0.09803921729, alpha: 1)
+        return UISwipeActionsConfiguration(actions: [moveNote])
+    }
+}
+
+extension NotesListViewController: NoteMove
+{
+    func moveNotes(to category: Categories) {
+        for note in mSelectedNotes
+        {
+            note.parentCategory = category
+        }
+        save()
+        mTableView.reloadData()
     }
 }
