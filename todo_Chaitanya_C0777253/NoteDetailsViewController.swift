@@ -17,6 +17,7 @@ class NoteDetailsViewController: UIViewController, UIPopoverPresentationControll
     @IBOutlet weak var mCreatedDateLabel: UILabel!
     @IBOutlet weak var mCompletedButton: UIBarButtonItem!
     @IBOutlet weak var mDeleteButton: UIBarButtonItem!
+    @IBOutlet weak var mSaveButton: UIBarButtonItem!
     
     var mSelectedNote: Notes?
     var mNoteCallBack: NoteCallBack!
@@ -27,6 +28,7 @@ class NoteDetailsViewController: UIViewController, UIPopoverPresentationControll
         if mSelectedNote == nil
         {
             self.navigationItem.rightBarButtonItems = nil
+            self.navigationItem.rightBarButtonItem = mSaveButton
             title = "New Note"
         }
         else
@@ -34,6 +36,69 @@ class NoteDetailsViewController: UIViewController, UIPopoverPresentationControll
             setData()
         }
         // Do any additional setup after loading the view.
+    }
+    
+    @IBAction func saveTapped(_ sender: Any) {
+        var no_prob = false
+        let title = mTitleTextField.text
+        if (title != nil), (title != "")
+        {
+            if mSelectedNote != nil
+            {
+                mSelectedNote?.title = mTitleTextField.text
+                var desc = mDescTextView.text
+                if desc == "Add Description"
+                {
+                    desc = nil
+                }
+                mSelectedNote?.desc = desc
+                mSelectedNote?.remindme = mRemindMeSwitch.isOn
+                if let date = mDueDate
+                {
+                    mSelectedNote?.date = date
+                }
+                no_prob = checkReminder(remindme: mRemindMeSwitch.isOn, date: mSelectedNote?.date)
+                if no_prob
+                {
+                    navigationController?.popViewController(animated: true)
+                    mNoteCallBack.NoteUpdateCallBack()
+                }
+            }
+            else
+            {
+                let title = mTitleTextField.text
+                var desc = mDescTextView.text
+                if desc == "Add Description"
+                {
+                    desc = nil
+                }
+                let remindme = mRemindMeSwitch.isOn
+                no_prob = checkReminder(remindme: mRemindMeSwitch.isOn, date: mDueDate)
+                if no_prob
+                {
+                    navigationController?.popViewController(animated: true)
+                    mNoteCallBack.NoteAddCallBack(title: title!, description: desc, due: mDueDate, remindme: remindme)
+                }
+            }
+        }
+        else
+        {
+            showAlert(title: "Invalid Title", message: "Please enter a valid title for the note")
+        }
+    }
+    
+    func checkReminder(remindme: Bool, date: Date?) -> Bool
+    {
+        if remindme, date != nil
+        {
+            return true
+        }
+        if !remindme
+        {
+            return true
+        }
+        showAlert(title: "Due Date not Added", message: "Please add a due date for which you need to be reminded for")
+        return false
     }
     
     func setData()
@@ -76,37 +141,7 @@ class NoteDetailsViewController: UIViewController, UIPopoverPresentationControll
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        let title = mTitleTextField.text
-        if (title != nil), (title != "")
-        {
-            if mSelectedNote != nil
-            {
-                mSelectedNote?.title = mTitleTextField.text
-                var desc = mDescTextView.text
-                if desc == "Add Description"
-                {
-                    desc = nil
-                }
-                mSelectedNote?.desc = desc
-                mSelectedNote?.remindme = mRemindMeSwitch.isOn
-                if let date = mDueDate
-                {
-                    mSelectedNote?.date = date
-                }
-                mNoteCallBack.NoteUpdateCallBack()
-            }
-            else
-            {
-                let title = mTitleTextField.text
-                var desc = mDescTextView.text
-                if desc == "Add Description"
-                {
-                    desc = nil
-                }
-                let remindme = mRemindMeSwitch.isOn
-                mNoteCallBack.NoteAddCallBack(title: title!, description: desc, due: mDueDate, remindme: remindme)
-            }
-        }
+        
     }
     
     @IBAction func deletetapped(_ sender: Any) {

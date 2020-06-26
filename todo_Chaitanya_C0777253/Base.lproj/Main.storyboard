@@ -236,6 +236,11 @@
                     </view>
                     <navigationItem key="navigationItem" largeTitleDisplayMode="never" id="2l2-o4-MZv">
                         <rightBarButtonItems>
+                            <barButtonItem systemItem="save" id="hLQ-gK-eQg">
+                                <connections>
+                                    <action selector="saveTapped:" destination="lTd-zq-Imz" id="1wd-6k-qYg"/>
+                                </connections>
+                            </barButtonItem>
                             <barButtonItem image="trash" catalog="system" id="j3p-3p-BsO">
                                 <color key="tintColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
@@ -256,6 +261,7 @@
                         <outlet property="mDescTextView" destination="ni5-rh-GrF" id="KDe-7E-HNw"/>
                         <outlet property="mDueDateButton" destination="Djy-TX-okX" id="Bag-vp-W6M"/>
                         <outlet property="mRemindMeSwitch" destination="BGi-9g-DvW" id="9S5-oH-JgC"/>
+                        <outlet property="mSaveButton" destination="hLQ-gK-eQg" id="DyS-vw-h1W"/>
                         <outlet property="mTitleTextField" destination="j4D-0E-Bva" id="9MV-oZ-aHk"/>
                     </connections>
                 </viewController>

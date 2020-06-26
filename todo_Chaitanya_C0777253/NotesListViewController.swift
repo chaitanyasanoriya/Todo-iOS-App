@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import EventKit
 
 protocol NoteCallBack {
     func NoteAddCallBack(title: String, description: String?, due: Date?, remindme: Bool)
@@ -54,6 +55,28 @@ class NotesListViewController: UIViewController{
         setNumberOfNotes()
         mTableView.allowsMultipleSelectionDuringEditing = true
         showSearchBar()
+    }
+    
+    func addEvent(title: String, date: Date)
+    {
+        let eventStore = EKEventStore()
+        switch EKEventStore.authorizationStatus(for: .event) {
+        case .authorized: insertEvent(store: eventStore, title: title, date: date)
+        case .denied:
+            print("Access denied")
+        case .notDetermined:
+            // 3
+            eventStore.requestAccess(to: .event, completion:
+                {[weak self] (granted: Bool, error: Error?) -> Void in
+                    if granted {
+                        self!.insertEvent(store: eventStore, title: title, date: date)
+                    } else {
+                        print("Access denied")
+                    }
+            })
+        default:
+            print("Case default")
+        }
     }
     
     func setNumberOfNotes()
@@ -270,6 +293,27 @@ class NotesListViewController: UIViewController{
         definesPresentationContext = true
     }
     
+    func insertEvent(store: EKEventStore, title: String, date: Date) {
+        let calendars = store.calendars(for: .event)
+        
+        for calendar in calendars {
+            let startDate = date.addingTimeInterval(-24*60*60)
+            let endDate = startDate.addingTimeInterval(1 * 60 * 60)
+            let event = EKEvent(eventStore: store)
+            event.calendar = calendar
+            
+            event.title = title
+            event.startDate = startDate
+            event.endDate = endDate
+            do {
+                try store.save(event, span: .thisEvent)
+                print("saved in \(calendar.title)")
+                break
+            }
+            catch {
+                print("Error saving event in calendar")             }
+        }
+    }
 }
 
 extension NotesListViewController: UIScrollViewDelegate {
@@ -340,6 +384,10 @@ extension NotesListViewController: NoteCallBack
         note.remindme =  remindme
         note.completed = false
         save()
+        if note.remindme, let date = note.date
+        {
+            addEvent(title: note.title!, date: date)
+        }
     }
     
     func NoteUpdateCallBack() {
