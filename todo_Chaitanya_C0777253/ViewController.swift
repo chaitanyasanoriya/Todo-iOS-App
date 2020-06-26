@@ -85,6 +85,11 @@ class ViewController: UITableViewController {
     }
     
     
+    /// Gives the TableView cell for each indexpath
+    /// - Parameters:
+    ///   - tableView: TableView for which this function is being called
+    ///   - indexPath: IndexPath for the Cell
+    /// - Returns: Cell for IndexPath
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell")
         if cell == nil
@@ -96,6 +101,8 @@ class ViewController: UITableViewController {
         return cell!
     }
     
+    /// Action Function for Add Category button when Tapped
+    /// - Parameter sender: Add Category Button
     @IBAction func addTapped(_ sender: Any) {
         
         var textField = UITextField()
@@ -103,10 +110,18 @@ class ViewController: UITableViewController {
         let addAction = UIAlertAction(title: "Add", style: .default) { (action) in
             let category_names = self.mCategories.map {$0.category}
             guard !category_names.contains(textField.text) else {self.showAlert(); return}
-            let new_category = Categories(context: self.context)
-            new_category.category = textField.text!
-            self.mCategories.append(new_category)
-            self.saveCategories()
+            if let title = textField.text, title != ""
+            {
+                let new_category = Categories(context: self.context)
+                new_category.category = title
+                self.mCategories.append(new_category)
+                self.saveCategories()
+            }
+            else
+            {
+                self.showAlert(title: "Invalid Name", msg: "Please enter a valid name for category")
+            }
+            
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         // change the font color of cancel action
@@ -122,19 +137,32 @@ class ViewController: UITableViewController {
         present(alert, animated: true, completion: nil)
     }
     
-    func showAlert() {
-        let alert = UIAlertController(title: "Name Taken", message: "Please choose another name", preferredStyle: .alert)
+    /// Shows Alert Dialog
+    /// - Parameters:
+    ///   - title: Title of Alert
+    ///   - msg: Message of Alert
+    func showAlert(title: String = "Name Taken", msg: String = "Please choose another name") {
+        let alert = UIAlertController(title: title, message: msg, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
         okAction.setValue(UIColor.orange, forKey: "titleTextColor")
         alert.addAction(okAction)
         present(alert, animated: true, completion: nil)
     }
     
+    /// Called when a Row of Table View is Selected / Tapped
+    /// - Parameters:
+    ///   - tableView: Table View whose row is tapped
+    ///   - indexPath: IndexPath of the row tapped
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         mIndex = indexPath.row
         performSegue(withIdentifier: "toNotesList", sender: self)
     }
     
+    /// Called when a row is being editted
+    /// - Parameters:
+    ///   - tableView: TableView whose row is being editted
+    ///   - editingStyle: Editing Style of the Row
+    ///   - indexPath: IndexPath of the row being editted
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let category = mCategories[indexPath.row]
@@ -144,11 +172,17 @@ class ViewController: UITableViewController {
         }
     }
     
+    /// Called when this View is going to appear
+    /// - Parameter animated: Tells is the appearance is going to be animated
     override func viewWillAppear(_ animated: Bool) {
         mTableView.reloadData()
         mIndex = nil
     }
     
+    /// Called when before segue is about to happen
+    /// - Parameters:
+    ///   - segue: Segue that is about to happen
+    ///   - sender: Optional Object of sender
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toNotesList", let nlvc = segue.destination as? NotesListViewController
         {
@@ -156,6 +190,7 @@ class ViewController: UITableViewController {
         }
     }
     
+    /// Adds the Search Bar in Navigation Bar
     func showSearchBar() {
         
         mSearchController.obscuresBackgroundDuringPresentation = false
@@ -165,6 +200,10 @@ class ViewController: UITableViewController {
         definesPresentationContext = true
     }
     
+    /// Loads All the Categories with predicate to memory
+    /// - Parameters:
+    ///   - request: Request for data fetching
+    ///   - predicate: Predicate to be applied
     func loadCategories(with request: NSFetchRequest<Categories> = Categories.fetchRequest(), predicate: NSPredicate? = nil) {
         request.predicate = predicate
         request.sortDescriptors = [NSSortDescriptor(key: "category", ascending: true)]
@@ -180,12 +219,18 @@ class ViewController: UITableViewController {
 
 extension ViewController: UISearchBarDelegate {
     
+    /// Called when Search button or return is tapped
+    /// - Parameter searchBar: Search Bar Object
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         let predicate = NSPredicate(format: "category CONTAINS[cd] %@", searchBar.text!)
         loadCategories(predicate: predicate)
         
     }
     
+    /// Called when text in search bar changes
+    /// - Parameters:
+    ///   - searchBar: Search Bar Object for which the text is changed
+    ///   - searchText: Current text in search bar
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         print(searchText)
         if searchBar.text?.count == 0
