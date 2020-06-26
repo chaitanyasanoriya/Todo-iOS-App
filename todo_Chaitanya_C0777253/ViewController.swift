@@ -27,6 +27,7 @@ class ViewController: UITableViewController {
         showSearchBar()
     }
     
+    /// Loading All Categories in Memory
     func loadCategories()
     {
         let request: NSFetchRequest<Categories> = Categories.fetchRequest()
@@ -40,6 +41,7 @@ class ViewController: UITableViewController {
         checkForArchived()
     }
     
+    /// Checks if Archived Category already exists or not, if not then creates one
     func checkForArchived()
     {
         var notThere = true
@@ -63,6 +65,7 @@ class ViewController: UITableViewController {
         }
     }
     
+    /// Saves Categories in Core Data
     func saveCategories() {
         do {
             try context.save()
@@ -72,10 +75,13 @@ class ViewController: UITableViewController {
         }
     }
     
+    /// Sets the number of rows in a section
+    /// - Parameters:
+    ///   - tableView: TableView for which this function is being called
+    ///   - section: Index of Section
+    /// - Returns: Number of rows in this section
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         return mCategories.count
-        //        return 2
     }
     
     
@@ -127,6 +133,15 @@ class ViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         mIndex = indexPath.row
         performSegue(withIdentifier: "toNotesList", sender: self)
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let category = mCategories[indexPath.row]
+            context.delete(category)
+            saveCategories()
+            tableView.reloadData()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
