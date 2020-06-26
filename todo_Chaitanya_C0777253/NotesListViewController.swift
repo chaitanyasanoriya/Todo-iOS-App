@@ -91,7 +91,6 @@ class NotesListViewController: UIViewController{
         
         do {
             mCompletedNotes = try mContext.fetch(request)
-            print("mCompletedNotes \(mCompletedNotes.count)")
         } catch {
             print("Error loading notes \(error.localizedDescription)")
         }
@@ -99,30 +98,23 @@ class NotesListViewController: UIViewController{
     
     func loadNotes(with request: NSFetchRequest<Notes> = Notes.fetchRequest(), predicate: NSCompoundPredicate) {
         mNotes = []
-        print(1)
         let categoryPredicate = NSPredicate(format: "parentCategory.category= %@", mSelectedCategory!.category!)
         let notComplete = NSPredicate(format: "completed == NO", "")
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, predicate, notComplete])
         request.predicate = compoundPredicate
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         do {
-            print(2)
             mNotes = try mContext.fetch(request)
-            print(3)
         } catch {
             print("Error loading notes \(error.localizedDescription)")
         }
         
         mCompletedNotes = []
-        print(4)
         let complete = NSPredicate(format: "completed == YES", "")
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate,complete, predicate])
         do {
-            print(5)
             mCompletedNotes = try mContext.fetch(request)
-            print(6)
-            print("mCompletedNotes \(mCompletedNotes.count)")
         } catch {
             print("Error loading notes \(error.localizedDescription)")
         }
@@ -205,19 +197,22 @@ class NotesListViewController: UIViewController{
             alert.dismiss(animated: true, completion: nil)
         }
         let delete_button = UIAlertAction(title: "Delete", style: .destructive) { (UIAlertAction) in
-            print(1)
             if let rows = self.mTableView.indexPathsForSelectedRows
             {
-                print(2)
                 for indexpath in rows.reversed()
                 {
-                    print(3)
-                    let note = self.mNotes.remove(at: indexpath.row)
+                    var note: Notes
+                    if indexpath.section == 0
+                    {
+                        note = self.mNotes.remove(at: indexpath.row)
+                    }
+                    else
+                    {
+                        note = self.mCompletedNotes.remove(at: indexpath.row)
+                    }
                     self.mContext.delete(note)
                 }
-                print(4)
                 self.save()
-                print(5)
                 self.mTableView.reloadData()
             }
             alert.dismiss(animated: true, completion: nil)
@@ -277,7 +272,6 @@ extension NotesListViewController: UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print(searchText)
         if searchBar.text?.count == 0
         {
             loadNotes()
@@ -292,13 +286,11 @@ extension NotesListViewController: UISearchBarDelegate {
 extension NotesListViewController: NoteCallBack
 {
     func deleteNote(note: Notes) {
-        for i in 0..<mNotes.count
-        {
-            if note === mNotes[i]
-            {
-                mNotes.remove(at: i)
-                break
-            }
+        mNotes.removeAll { (Notes) -> Bool in
+            return Notes == note
+        }
+        mCompletedNotes.removeAll { (Notes) -> Bool in
+            return Notes == note
         }
         setNumberOfNotes()
         mContext.delete(note)
@@ -393,13 +385,27 @@ extension NotesListViewController:  UITableViewDataSource, UITableViewDelegate
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == 0
-        {
-            return nil
-        }
-        else
+        if section == 1, mCompletedNotes.count > 0
         {
             return "Completed"
+        }
+        return nil
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let note: Notes
+            if indexPath.section == 0
+            {
+                note = mNotes.remove(at: indexPath.row)
+            }
+            else
+            {
+                note = mCompletedNotes.remove(at: indexPath.row)
+            }
+            mContext.delete(note)
+            save()
+            tableView.reloadData()
         }
     }
 }

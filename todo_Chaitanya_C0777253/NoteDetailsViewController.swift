@@ -111,6 +111,7 @@ class NoteDetailsViewController: UIViewController, UIPopoverPresentationControll
     
     @IBAction func deletetapped(_ sender: Any) {
         mNoteCallBack.deleteNote(note: mSelectedNote!)
+        navigationController?.popViewController(animated: true)
     }
     /*
      // MARK: - Navigation
