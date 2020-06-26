@@ -388,9 +388,14 @@ extension NotesListViewController: NoteCallBack
         {
             addEvent(title: note.title!, date: date)
         }
+        mTableView.reloadData()
     }
     
     func NoteUpdateCallBack() {
+        if let cond = mSelectedNote?.completed, cond
+        {
+            mSelectedNote?.parentCategory = ViewController.mArchivedCategory
+        }
         save()
     }
 }
@@ -433,7 +438,7 @@ extension NotesListViewController:  UITableViewDataSource, UITableViewDelegate
                 {
                     cell?.backgroundColor = .red
                 }
-                if Calendar.current.isDateInTomorrow(date)
+                if Calendar.current.isDate(mCurrentDate.addingTimeInterval(24*60*60), equalTo: date, toGranularity: .day)
                 {
                     cell?.backgroundColor = .green
                 }
@@ -505,8 +510,44 @@ extension NotesListViewController:  UITableViewDataSource, UITableViewDelegate
             self.performSegue(withIdentifier: "moveTo", sender: self)
             completion(true)
         }
+        let addDate = UIContextualAction(style: .normal, title: "add day") { (action, view, completion) in
+            if indexPath.section == 0
+            {
+                self.mNotes[indexPath.row].date = self.mNotes[indexPath.row].date?.addingTimeInterval(24*60*60)
+            }
+            else
+            {
+                self.mCompletedNotes[indexPath.row].date = self.mCompletedNotes[indexPath.row].date?.addingTimeInterval(24*60*60)
+            }
+            self.save()
+            self.cellProperColor(indexpath: indexPath)
+            completion(true)
+        }
         moveNote.backgroundColor = #colorLiteral(red: 0.7254902124, green: 0.4784313738, blue: 0.09803921729, alpha: 1)
-        return UISwipeActionsConfiguration(actions: [moveNote])
+        return UISwipeActionsConfiguration(actions: [moveNote, addDate])
+    }
+    
+    func cellProperColor(indexpath: IndexPath)
+    {
+        let cell = mTableView.cellForRow(at: indexpath)
+        if indexpath.section == 0
+        {
+            if let date = mNotes[indexpath.row].date
+            {
+                if date <= mCurrentDate
+                {
+                    cell?.backgroundColor = .red
+                }
+                else if Calendar.current.isDate(mCurrentDate.addingTimeInterval(24*60*60), equalTo: date, toGranularity: .day)
+                {
+                    cell?.backgroundColor = .green
+                }
+                else
+                {
+                    cell?.backgroundColor = .white
+                }
+            }
+        }
     }
 }
 

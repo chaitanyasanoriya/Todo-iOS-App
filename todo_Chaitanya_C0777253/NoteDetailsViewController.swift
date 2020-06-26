@@ -200,10 +200,11 @@ class DatePopOverViewController: UIViewController
     var mDateCallBack: DateCallBack!
     
     @IBOutlet weak var mDoneButton: UIButton!
+    var picker: UIDatePicker!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let picker : UIDatePicker = UIDatePicker()
+        picker = UIDatePicker()
         picker.datePickerMode = UIDatePicker.Mode.date
         picker.minimumDate = Date()
         picker.addTarget(self, action: #selector(dueDateChanged), for: UIControl.Event.valueChanged)
@@ -219,6 +220,7 @@ class DatePopOverViewController: UIViewController
     }
     
     @IBAction func doneButtonTapped(_ sender: Any) {
+        mDateCallBack.dateChanged(date: picker.date)
         dismiss(animated: true, completion: nil)
     }
 }

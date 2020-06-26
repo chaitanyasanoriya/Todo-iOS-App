@@ -123,6 +123,9 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ltv-jO-Yb6"/>
                     </view>
+                    <toolbarItems>
+                        <barButtonItem title="Item" id="9Tr-k1-Efc"/>
+                    </toolbarItems>
                     <navigationItem key="navigationItem" title="Todo" largeTitleDisplayMode="always" id="wh3-Ly-EMk">
                         <barButtonItem key="rightBarButtonItem" systemItem="edit" id="4Ee-mz-s9a">
                             <connections>
@@ -130,6 +133,7 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="mDeleteButton" destination="Dlo-kB-eFN" id="W83-62-yfZ"/>
                         <outlet property="mLabel" destination="df8-jN-8Eg" id="dTF-k7-rRM"/>
@@ -160,14 +164,14 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Add Description" textAlignment="natural" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ni5-rh-GrF">
-                                <rect key="frame" x="20" y="269" width="374" height="553"/>
+                                <rect key="frame" x="20" y="269" width="374" height="504"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hiw-p8-9UB">
-                                <rect key="frame" x="20" y="842" width="374" height="0.0"/>
+                                <rect key="frame" x="20" y="793" width="374" height="0.0"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>

@@ -11,6 +11,7 @@ import CoreData
 
 class ViewController: UITableViewController {
     
+    static var mArchivedCategory: Categories!
     var mCategories = [Categories]()
     var mIndex: Int?
     @IBOutlet var mTableView: UITableView!
@@ -35,8 +36,31 @@ class ViewController: UITableViewController {
         } catch {
             print("Error loading folders \(error.localizedDescription)")
         }
-        
         tableView.reloadData()
+        checkForArchived()
+    }
+    
+    func checkForArchived()
+    {
+        var notThere = true
+        for category in mCategories
+        {
+            if category.category == "Archived"
+            {
+                ViewController.mArchivedCategory = category
+                notThere = false
+                break
+            }
+        }
+        if notThere
+        {
+            print("creating new")
+            let category = Categories(context: context)
+            category.category = "Archived"
+            ViewController.mArchivedCategory = category
+            mCategories.append(category)
+            saveCategories()
+        }
     }
     
     func saveCategories() {
