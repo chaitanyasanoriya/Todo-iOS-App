@@ -5,11 +5,11 @@
         <relationship name="notes" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Notes" inverseName="parentCategory" inverseEntity="Notes"/>
     </entity>
     <entity name="Notes" representedClassName="Notes" syncable="YES" codeGenerationType="class">
-        <attribute name="completed" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="created_date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="completed" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="created_date" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="desc" optional="YES" attributeType="String"/>
-        <attribute name="remindme" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="remindme" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="title" attributeType="String"/>
         <relationship name="parentCategory" maxCount="1" deletionRule="No Action" destinationEntity="Categories" inverseName="notes" inverseEntity="Categories"/>
     </entity>

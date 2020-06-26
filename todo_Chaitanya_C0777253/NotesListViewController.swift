@@ -10,11 +10,12 @@ import UIKit
 import CoreData
 
 protocol NoteCallBack {
-    func NoteAddCallBack(title: String, description: String, due: Date?, remindme: Bool)
-    func NoteUpdateCallBack(note: Notes)
+    func NoteAddCallBack(title: String, description: String?, due: Date?, remindme: Bool)
+    func NoteUpdateCallBack()
+    func deleteNote(note: Notes)
 }
 
-class NotesListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
+class NotesListViewController: UIViewController{
     
     
     @IBOutlet weak var mTableView: UITableView!
@@ -22,6 +23,7 @@ class NotesListViewController: UIViewController, UITableViewDataSource, UITableV
     var mNavigationBarIsTranslucent: Bool!
     var mNavigationBarTintColor: UIColor!
     var mNotes = [Notes]()
+    var mCompletedNotes = [Notes]()
     let mContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     @IBOutlet weak var mMoveToButton: UIButton!
     let mCurrentDate: Date = Date()
@@ -29,7 +31,8 @@ class NotesListViewController: UIViewController, UITableViewDataSource, UITableV
     @IBOutlet weak var mDeleteButton: UIButton!
     var mNavigationTextAttributes: [NSAttributedString.Key: Any]!
     let mSearchController = UISearchController(searchResultsController: nil)
-    let mWhiteImage = UIImage(named: "whitebackground")
+    var mSelectedNote: Notes?
+    var mIsEditing: Bool = false
     
     var mSelectedCategory: Categories?
     {
@@ -50,13 +53,13 @@ class NotesListViewController: UIViewController, UITableViewDataSource, UITableV
     
     func setNumberOfNotes()
     {
-        if mSelectedCategory?.notes?.count == 1
+        if mNotes.count == 1
         {
             mLabel.text = "1 note"
         }
         else
         {
-            mLabel.text = "\(mSelectedCategory?.notes?.count ?? 0) notes"
+            mLabel.text = "\(mNotes.count) notes"
         }
     }
     
@@ -67,77 +70,85 @@ class NotesListViewController: UIViewController, UITableViewDataSource, UITableV
         self.mTableView.tableHeaderView = headerView
     }
     
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return UITableView.automaticDimension
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return mNotes.count
-        return 20
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell")
-        if cell == nil
-        {
-            cell = UITableViewCell(style: .subtitle, reuseIdentifier: "categoryCell")
-        }
-//        cell?.textLabel?.text = mNotes[indexPath.row].title
-//        cell?.detailTextLabel?.text = mNotes[indexPath.row].desc
-//        if  let date = mNotes[indexPath.row].date
-//        {
-//            if date >= mCurrentDate
-//            {
-//                cell?.backgroundColor = .red
-//            }
-//            if date < mCurrentDate, Calendar.current.date(byAdding: .day, value: -2, to: mCurrentDate)! < date
-//            {
-//                cell?.backgroundColor = .green
-//            }
-//        }
-//        else
-//        {
-//            cell?.backgroundColor = .white
-//        }
-        cell?.textLabel?.text = "hello"
-        cell?.detailTextLabel?.text = "hello"
-//        let button = UIButton(type: .contactAdd)
-//        button.tag = indexPath.row
-//        button.addTarget(self, action: #selector(pressed(sender:)), for: .touchUpInside)
-//        cell?.accessoryView = button
-        return cell!
-    }
-    
-//    @objc func pressed(sender: UIButton!) {
-//        print(sender.tag)
-//    }
-    
     func loadNotes() {
+        mNotes = []
         let request: NSFetchRequest<Notes> = Notes.fetchRequest()
         let categoryPredicate = NSPredicate(format: "parentCategory.category=%@", mSelectedCategory!.category!)
+        let notComplete = NSPredicate(format: "completed == NO", "")
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-        request.predicate = categoryPredicate
-
+        request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate,notComplete])
+        
         do {
             mNotes = try mContext.fetch(request)
         } catch {
             print("Error loading notes \(error.localizedDescription)")
         }
+        
+        mCompletedNotes = []
+        let complete = NSPredicate(format: "completed == YES", "")
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate,complete])
+        
+        do {
+            mCompletedNotes = try mContext.fetch(request)
+            print("mCompletedNotes \(mCompletedNotes.count)")
+        } catch {
+            print("Error loading notes \(error.localizedDescription)")
+        }
+    }
+    
+    func loadNotes(with request: NSFetchRequest<Notes> = Notes.fetchRequest(), predicate: NSCompoundPredicate) {
+        mNotes = []
+        print(1)
+        let categoryPredicate = NSPredicate(format: "parentCategory.category= %@", mSelectedCategory!.category!)
+        let notComplete = NSPredicate(format: "completed == NO", "")
+        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, predicate, notComplete])
+        request.predicate = compoundPredicate
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        do {
+            print(2)
+            mNotes = try mContext.fetch(request)
+            print(3)
+        } catch {
+            print("Error loading notes \(error.localizedDescription)")
+        }
+        
+        mCompletedNotes = []
+        print(4)
+        let complete = NSPredicate(format: "completed == YES", "")
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate,complete, predicate])
+        do {
+            print(5)
+            mCompletedNotes = try mContext.fetch(request)
+            print(6)
+            print("mCompletedNotes \(mCompletedNotes.count)")
+        } catch {
+            print("Error loading notes \(error.localizedDescription)")
+        }
+        
+        mTableView.reloadData()
     }
     
     
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
+    // MARK: - Navigation
+    
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let ndvc = segue.destination as? NoteDetailsViewController
+        {
+            ndvc.mNoteCallBack = self
+            if mSelectedNote != nil
+            {
+                ndvc.mSelectedNote = mSelectedNote
+            }
+        }
+    }
     
     override func viewWillAppear(_ animated: Bool) {
+        
         super.viewWillAppear(animated)
+        
         // Make sure the top constraint of the TableView/CollectionView/ScrollView is equal to Superview and not Safe Area
         mNavigationBarShadowImage = self.navigationController?.navigationBar.shadowImage
         mNavigationBarIsTranslucent = self.navigationController?.navigationBar.isTranslucent
@@ -152,6 +163,10 @@ class NotesListViewController: UIViewController, UITableViewDataSource, UITableV
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         mNavigationTextAttributes = self.navigationController?.navigationBar.largeTitleTextAttributes
         self.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        mSelectedNote = nil
+        
+        //        loadNotes()
+        //        mTableView.reloadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -172,6 +187,7 @@ class NotesListViewController: UIViewController, UITableViewDataSource, UITableV
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: "mEditButtonTapped:")
             mMoveToButton.isHidden = true
             mDeleteButton.isHidden = true
+            mIsEditing = false
         }
         else
         {
@@ -179,6 +195,7 @@ class NotesListViewController: UIViewController, UITableViewDataSource, UITableV
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: "mEditButtonTapped:")
             mMoveToButton.isHidden = false
             mDeleteButton.isHidden = false
+            mIsEditing = true
         }
     }
     
@@ -188,14 +205,20 @@ class NotesListViewController: UIViewController, UITableViewDataSource, UITableV
             alert.dismiss(animated: true, completion: nil)
         }
         let delete_button = UIAlertAction(title: "Delete", style: .destructive) { (UIAlertAction) in
+            print(1)
             if let rows = self.mTableView.indexPathsForSelectedRows
             {
-                self.mTableView.deleteRows(at: rows, with: .left)
+                print(2)
                 for indexpath in rows.reversed()
                 {
-                    self.mNotes.remove(at: indexpath.row)
+                    print(3)
+                    let note = self.mNotes.remove(at: indexpath.row)
+                    self.mContext.delete(note)
                 }
+                print(4)
                 self.save()
+                print(5)
+                self.mTableView.reloadData()
             }
             alert.dismiss(animated: true, completion: nil)
         }
@@ -212,22 +235,8 @@ class NotesListViewController: UIViewController, UITableViewDataSource, UITableV
             loadNotes()
             mTableView.reloadData()
         } catch {
-            print("Error saving folders \(error.localizedDescription)")
+            print("Error saving note \(error.localizedDescription) error: \(error)")
         }
-    }
-    
-    func loadNotes(with request: NSFetchRequest<Notes> = Notes.fetchRequest(), predicate: NSPredicate) {
-        let categoryPredicate = NSPredicate(format: "parentCategory.category=%@", mSelectedCategory!.category!)
-        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, predicate])
-        request.predicate = compoundPredicate
-        request.sortDescriptors = [NSSortDescriptor(key: "category", ascending: true)]
-        do {
-            mNotes = try mContext.fetch(request)
-        } catch {
-            print("Error loading notes \(error.localizedDescription)")
-        }
-        
-        mTableView.reloadData()
     }
     
     func showSearchBar() {
@@ -236,12 +245,10 @@ class NotesListViewController: UIViewController, UITableViewDataSource, UITableV
         mSearchController.searchBar.placeholder = "Search Notes"
         navigationItem.searchController = mSearchController
         mSearchController.searchBar.delegate = self
+        mSearchController.searchBar.searchTextField.backgroundColor = UIColor(displayP3Red: 1, green: 1, blue: 1, alpha: 0.7)
         definesPresentationContext = true
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "NoteDetails", sender: self)
-    }
 }
 
 extension NotesListViewController: UIScrollViewDelegate {
@@ -264,9 +271,9 @@ extension NotesListViewController: UIScrollViewDelegate {
 extension NotesListViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        let predicate = NSPredicate(format: "category CONTAINS[cd] %@", searchBar.text!)
-        loadNotes(predicate: predicate)
-        
+        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        let descpredicate = NSPredicate(format: "desc CONTAINS[cd] %@", searchBar.text!)
+        loadNotes(predicate: NSCompoundPredicate(orPredicateWithSubpredicates: [predicate,descpredicate]))
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -277,18 +284,122 @@ extension NotesListViewController: UISearchBarDelegate {
             DispatchQueue.main.async {
                 searchBar.resignFirstResponder()
             }
-            
+            mTableView.reloadData()
         }
     }
 }
 
 extension NotesListViewController: NoteCallBack
 {
-    func NoteAddCallBack(title: String, description: String, due: Date?, remindme: Bool) {
-        <#code#>
+    func deleteNote(note: Notes) {
+        for i in 0..<mNotes.count
+        {
+            if note === mNotes[i]
+            {
+                mNotes.remove(at: i)
+                break
+            }
+        }
+        setNumberOfNotes()
+        mContext.delete(note)
     }
     
-    func NoteUpdateCallBack(note: Notes) {
-        <#code#>
+    func NoteAddCallBack(title: String, description: String?, due: Date?, remindme: Bool) {
+        let note = Notes(context: mContext)
+        note.title = title
+        note.parentCategory = mSelectedCategory
+        note.desc = description
+        note.created_date = Date()
+        note.date = due
+        note.remindme =  remindme
+        note.completed = false
+        save()
+    }
+    
+    func NoteUpdateCallBack() {
+        save()
+    }
+}
+
+extension NotesListViewController:  UITableViewDataSource, UITableViewDelegate
+{
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 0
+        {
+            setNumberOfNotes()
+            return mNotes.count
+        }
+        else
+        {
+            return mCompletedNotes.count
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        var cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell")
+        if cell == nil
+        {
+            cell = UITableViewCell(style: .subtitle, reuseIdentifier: "categoryCell")
+        }
+        if indexPath.section == 0
+        {
+            cell?.textLabel?.text = mNotes[indexPath.row].title
+            cell?.detailTextLabel?.text = mNotes[indexPath.row].desc
+            if  let date = mNotes[indexPath.row].date
+            {
+                if date <= mCurrentDate
+                {
+                    cell?.backgroundColor = .red
+                }
+                if Calendar.current.isDateInTomorrow(date)
+                {
+                    cell?.backgroundColor = .green
+                }
+            }
+            else
+            {
+                cell?.backgroundColor = .white
+            }
+        }
+        else
+        {
+            cell?.textLabel?.text = mCompletedNotes[indexPath.row].title
+            cell?.detailTextLabel?.text = mCompletedNotes[indexPath.row].desc
+        }
+        return cell!
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if !mIsEditing
+        {
+            if indexPath.section  == 0
+            {
+                mSelectedNote = mNotes[indexPath.row]
+            }
+            else
+            {
+                mSelectedNote = mCompletedNotes[indexPath.row]
+            }
+            performSegue(withIdentifier: "NoteDetails", sender: self)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 0
+        {
+            return nil
+        }
+        else
+        {
+            return "Completed"
+        }
     }
 }

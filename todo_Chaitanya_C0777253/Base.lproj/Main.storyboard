@@ -38,6 +38,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="mTableView" destination="noT-EV-RFo" id="eiJ-kH-Qvy"/>
                         <segue destination="Rsi-8I-aPb" kind="show" identifier="toNotesList" id="hwU-Uc-H8y"/>
                     </connections>
                 </tableViewController>
@@ -208,9 +209,6 @@
                                     </stackView>
                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="BGi-9g-DvW">
                                         <rect key="frame" x="325" y="0.0" width="51" height="31"/>
-                                        <connections>
-                                            <action selector="remindMeValueChanged:" destination="lTd-zq-Imz" eventType="valueChanged" id="hn7-no-kaW"/>
-                                        </connections>
                                     </switch>
                                 </subviews>
                             </stackView>
@@ -243,7 +241,7 @@
                                     <action selector="deletetapped:" destination="lTd-zq-Imz" id="jpJ-XK-Ve7"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem image="checkmark.circle" catalog="system" id="3Pb-QE-v7y">
+                            <barButtonItem title="Item" image="checkmark.circle" catalog="system" id="3Pb-QE-v7y">
                                 <connections>
                                     <action selector="completedTapped:" destination="lTd-zq-Imz" id="XiT-lE-AVP"/>
                                 </connections>
@@ -253,6 +251,7 @@
                     <connections>
                         <outlet property="mCompletedButton" destination="3Pb-QE-v7y" id="ZDH-OH-ucZ"/>
                         <outlet property="mCreatedDateLabel" destination="hiw-p8-9UB" id="G1Y-jN-eJ2"/>
+                        <outlet property="mDeleteButton" destination="j3p-3p-BsO" id="avb-Cg-3VR"/>
                         <outlet property="mDescTextView" destination="ni5-rh-GrF" id="KDe-7E-HNw"/>
                         <outlet property="mDueDateButton" destination="Djy-TX-okX" id="Bag-vp-W6M"/>
                         <outlet property="mRemindMeSwitch" destination="BGi-9g-DvW" id="9S5-oH-JgC"/>
@@ -262,6 +261,45 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="el4-gh-1Qa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2252.1739130434785" y="170.75892857142856"/>
+        </scene>
+        <!--Date Pop Over View Controller-->
+        <scene sceneID="RIM-3y-aVJ">
+            <objects>
+                <viewController storyboardIdentifier="DatePopOverViewController" id="gUW-Pc-yB4" customClass="DatePopOverViewController" customModule="todo_Chaitanya_C0777253" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="MCf-GY-4GF">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QYG-VK-r5u">
+                                <rect key="frame" x="357" y="64" width="37" height="30"/>
+                                <state key="normal" title="Done"/>
+                                <connections>
+                                    <action selector="doneButtonTapped:" destination="gUW-Pc-yB4" eventType="touchUpInside" id="uxL-fg-Jmm"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pick Due Date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4zX-TQ-2JL">
+                                <rect key="frame" x="20" y="64" width="108" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="4zX-TQ-2JL" firstAttribute="top" secondItem="SMS-GW-a0e" secondAttribute="top" constant="20" id="Fz1-vg-sas"/>
+                            <constraint firstItem="4zX-TQ-2JL" firstAttribute="leading" secondItem="SMS-GW-a0e" secondAttribute="leading" constant="20" id="OuJ-Ao-aze"/>
+                            <constraint firstItem="SMS-GW-a0e" firstAttribute="trailing" secondItem="QYG-VK-r5u" secondAttribute="trailing" constant="20" id="RZW-tH-gG0"/>
+                            <constraint firstItem="QYG-VK-r5u" firstAttribute="top" secondItem="SMS-GW-a0e" secondAttribute="top" constant="20" id="qVV-gc-uZC"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="SMS-GW-a0e"/>
+                    </view>
+                    <connections>
+                        <outlet property="mDoneButton" destination="QYG-VK-r5u" id="pJc-rj-ngV"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="PlQ-Hw-XOq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3119" y="162"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="xx8-ty-BHQ">
@@ -283,7 +321,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="yFU-gA-scO"/>
+        <segue reference="OfE-qI-xs8"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="bell" catalog="system" width="128" height="124"/>

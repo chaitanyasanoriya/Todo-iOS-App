@@ -13,6 +13,7 @@ class ViewController: UITableViewController {
     
     var mCategories = [Categories]()
     var mIndex: Int?
+    @IBOutlet var mTableView: UITableView!
     
     // create a context
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -105,6 +106,7 @@ class ViewController: UITableViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        mTableView.reloadData()
         mIndex = nil
     }
     
