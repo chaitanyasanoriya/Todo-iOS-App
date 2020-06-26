@@ -39,6 +39,7 @@ class NotesListViewController: UIViewController{
     var mSelectedNote: Notes?
     var mIsEditing: Bool = false
     var mSelectedNotes = [Notes]()
+    @IBOutlet weak var mSortButton: UIBarButtonItem!
     
     var mSelectedCategory: Categories?
     {
@@ -313,6 +314,87 @@ class NotesListViewController: UIViewController{
             catch {
                 print("Error saving event in calendar")             }
         }
+    }
+    
+    @IBAction func sortTapped(_ sender: UIBarButtonItem)
+    {
+        if sender.tag == 0
+        {
+            mNotes.sort { (note1, note2) -> Bool in
+                if note1.title! > note2.title!
+                {
+                    return true
+                }
+                return false
+            }
+            mCompletedNotes.sort { (note1, note2) -> Bool in
+                if note1.title! > note2.title!
+                {
+                    return true
+                }
+                return false
+            }
+            mSortButton.title = "Title Desc"
+            sender.tag += 1
+        }
+        else if sender.tag == 1
+        {
+            mNotes.sort { (note1, note2) -> Bool in
+                if note1.created_date! < note2.created_date!
+                {
+                    return true
+                }
+                return false
+            }
+            mCompletedNotes.sort { (note1, note2) -> Bool in
+                if note1.created_date! < note2.created_date!
+                {
+                    return true
+                }
+                return false
+            }
+            mSortButton.title = "Date Asc"
+            sender.tag += 1
+        }
+        else if sender.tag == 2
+        {
+            mNotes.sort { (note1, note2) -> Bool in
+                if note1.created_date! > note2.created_date!
+                {
+                    return true
+                }
+                return false
+            }
+            mCompletedNotes.sort { (note1, note2) -> Bool in
+                if note1.created_date! > note2.created_date!
+                {
+                    return true
+                }
+                return false
+            }
+            mSortButton.title = "Date Desc"
+            sender.tag += 1
+        }
+        else if sender.tag == 3
+        {
+            mNotes.sort { (note1, note2) -> Bool in
+                if note1.title! < note2.title!
+                {
+                    return true
+                }
+                return false
+            }
+            mCompletedNotes.sort { (note1, note2) -> Bool in
+                if note1.title! < note2.title!
+                {
+                    return true
+                }
+                return false
+            }
+            mSortButton.title = "Title Asc"
+            sender.tag = 0
+        }
+        mTableView.reloadData()
     }
 }
 

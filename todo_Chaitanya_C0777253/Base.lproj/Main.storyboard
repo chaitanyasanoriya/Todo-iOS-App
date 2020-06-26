@@ -127,17 +127,25 @@
                         <barButtonItem title="Item" id="9Tr-k1-Efc"/>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Todo" largeTitleDisplayMode="always" id="wh3-Ly-EMk">
-                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="4Ee-mz-s9a">
-                            <connections>
-                                <action selector="mEditButtonTapped:" destination="Rsi-8I-aPb" id="wee-9x-kFs"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="edit" id="4Ee-mz-s9a">
+                                <connections>
+                                    <action selector="mEditButtonTapped:" destination="Rsi-8I-aPb" id="wee-9x-kFs"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Title Asc" id="qIf-kU-5J0">
+                                <connections>
+                                    <action selector="sortTapped:" destination="Rsi-8I-aPb" id="4wd-iT-4Hx"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="mDeleteButton" destination="Dlo-kB-eFN" id="W83-62-yfZ"/>
                         <outlet property="mLabel" destination="df8-jN-8Eg" id="dTF-k7-rRM"/>
                         <outlet property="mMoveToButton" destination="AQD-Xe-5Z9" id="cAJ-id-A4Q"/>
+                        <outlet property="mSortButton" destination="qIf-kU-5J0" id="utd-7V-gwm"/>
                         <outlet property="mTableView" destination="7KU-wq-Cot" id="fno-dj-Tiy"/>
                         <segue destination="lTd-zq-Imz" kind="show" identifier="NoteDetails" id="OfE-qI-xs8"/>
                         <segue destination="HjO-rD-G2U" kind="presentation" identifier="moveTo" id="jbR-mY-32X"/>
