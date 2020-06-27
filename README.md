@@ -1,4 +1,5 @@
 # Todo-iOS-App
+This is an iOS application where the users can manage a list of TODOs and Notes.
 Advanced iOS Development Final Assignment. This is an iOS application, created as an Assignment. 
 Requirements
 * User should be allowed to sort tasks by title or by date/time that were created.
