@@ -8,12 +8,17 @@
 
 import UIKit
 import CoreData
+import UserNotifications
 
 class ViewController: UITableViewController {
     
     static var mArchivedCategory: Categories!
     var mCategories = [Categories]()
     var mIndex: Int?
+    var mNotesString = [String]()
+    var mNotes = [Notes]()
+    let mCurrentDate = Date()
+    
     @IBOutlet var mTableView: UITableView!
     
     // create a context
@@ -25,6 +30,7 @@ class ViewController: UITableViewController {
         // Do any additional setup after loading the view.
         loadCategories()
         showSearchBar()
+        loadNotes()
     }
     
     /// Loading All Categories in Memory
@@ -219,7 +225,7 @@ class ViewController: UITableViewController {
 
 extension ViewController: UISearchBarDelegate {
     
-    /// Called when Search button or return is tapped
+    /// Called when Search button or return is tapped. Used to narrow the categories and reload table data
     /// - Parameter searchBar: Search Bar Object
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         let predicate = NSPredicate(format: "category CONTAINS[cd] %@", searchBar.text!)
@@ -227,12 +233,11 @@ extension ViewController: UISearchBarDelegate {
         
     }
     
-    /// Called when text in search bar changes
+    /// Called when text in search bar changes. Used to load all the categories in memory and reload table data when search bar is empty
     /// - Parameters:
     ///   - searchBar: Search Bar Object for which the text is changed
     ///   - searchText: Current text in search bar
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print(searchText)
         if searchBar.text?.count == 0
         {
             loadCategories()
@@ -242,5 +247,70 @@ extension ViewController: UISearchBarDelegate {
             
         }
     }
+    
+    
+    /// Called when cancel button of search bar is clicked. Used to load all the categories in memory and reload table data
+    /// - Parameter searchBar: Search bar for which this function is being called
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        loadCategories()
+        DispatchQueue.main.async {
+            searchBar.resignFirstResponder()
+        }
+        mTableView.reloadData()
+    }
 }
 
+
+extension ViewController: UIPopoverPresentationControllerDelegate
+{
+    func showDueDateViewController()
+    {
+        let storyboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "NoteDueViewController") as! NoteDueViewController
+        vc.modalPresentationStyle = .popover
+        vc.preferredContentSize = CGSize(width: self.view.frame.width, height: 400)
+        if let presentationController = vc.popoverPresentationController {
+            presentationController.delegate = self
+            presentationController.permittedArrowDirections = .up
+            presentationController.sourceView = self.view
+            presentationController.sourceRect = CGRect(x: 0, y: 0, width: 0, height: 0)
+            vc.mNotesString = mNotesString
+            self.present(vc, animated: true, completion: nil)
+        }
+    }
+    
+    func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
+        return .none
+    }
+}
+
+
+extension ViewController
+{
+    func loadNotes()
+    {
+        let request: NSFetchRequest<Notes> = Notes.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        do {
+            mNotes = try context.fetch(request)
+        } catch {
+            print("Error loading folders \(error.localizedDescription)")
+        }
+        setupNotes()
+    }
+    
+    func setupNotes()
+    {
+        for note in mNotes
+        {
+            if  let date = note.date, Calendar.current.isDate(mCurrentDate.addingTimeInterval(24*60*60), equalTo: date, toGranularity: .day)
+            {
+                mNotesString.append(note.title!)
+            }
+        }
+        if mNotesString.count != 0
+        {
+            showDueDateViewController()
+        }
+    }
+}

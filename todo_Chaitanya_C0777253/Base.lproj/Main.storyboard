@@ -87,7 +87,7 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="df8-jN-8Eg">
                                 <rect key="frame" x="186" y="835.5" width="42" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
+                                <color key="textColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DSX-wR-yVn">
@@ -370,6 +370,55 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PlQ-Hw-XOq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3119" y="162"/>
+        </scene>
+        <!--Note Due View Controller-->
+        <scene sceneID="JIs-80-Jpt">
+            <objects>
+                <viewController storyboardIdentifier="NoteDueViewController" id="KLA-K0-p0N" customClass="NoteDueViewController" customModule="todo_Chaitanya_C0777253" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="iDE-ph-dVs">
+                        <rect key="frame" x="0.0" y="0.0" width="400" height="500"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qQK-zB-E1t">
+                                <rect key="frame" x="343" y="64" width="37" height="30"/>
+                                <state key="normal" title="Done"/>
+                                <connections>
+                                    <action selector="doneClicked:" destination="KLA-K0-p0N" eventType="touchUpInside" id="O5Z-gr-NgW"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Notes Due" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l6X-Ua-ikl">
+                                <rect key="frame" x="20" y="64" width="114" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="j6p-XY-s8k">
+                                <rect key="frame" x="0.0" y="114" width="400" height="386"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="KLA-K0-p0N" id="8mr-mz-sUy"/>
+                                    <outlet property="delegate" destination="KLA-K0-p0N" id="2zy-pZ-iiZ"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="84p-mn-FPB" firstAttribute="trailing" secondItem="j6p-XY-s8k" secondAttribute="trailing" id="8Ye-bR-OWw"/>
+                            <constraint firstItem="84p-mn-FPB" firstAttribute="trailing" secondItem="qQK-zB-E1t" secondAttribute="trailing" constant="20" id="KgJ-DT-ZfB"/>
+                            <constraint firstItem="l6X-Ua-ikl" firstAttribute="top" secondItem="84p-mn-FPB" secondAttribute="top" constant="20" id="PIt-1f-2xO"/>
+                            <constraint firstItem="qQK-zB-E1t" firstAttribute="top" secondItem="84p-mn-FPB" secondAttribute="top" constant="20" id="dWl-MM-he4"/>
+                            <constraint firstItem="j6p-XY-s8k" firstAttribute="leading" secondItem="84p-mn-FPB" secondAttribute="leading" id="fNE-l8-GHc"/>
+                            <constraint firstItem="84p-mn-FPB" firstAttribute="bottom" secondItem="j6p-XY-s8k" secondAttribute="bottom" id="jWg-DL-hEa"/>
+                            <constraint firstItem="l6X-Ua-ikl" firstAttribute="leading" secondItem="84p-mn-FPB" secondAttribute="leading" constant="20" id="uZE-Cj-jmE"/>
+                            <constraint firstItem="j6p-XY-s8k" firstAttribute="top" secondItem="l6X-Ua-ikl" secondAttribute="bottom" constant="20" id="yMr-PA-7A3"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="84p-mn-FPB"/>
+                    </view>
+                    <size key="freeformSize" width="400" height="500"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="keA-nv-nnd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2386" y="922"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="xx8-ty-BHQ">

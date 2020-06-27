@@ -10,12 +10,14 @@ import UIKit
 import CoreData
 import EventKit
 
+/// Protocol for Callback Functions to Add, Update and Delete a Note
 protocol NoteCallBack {
     func NoteAddCallBack(title: String, description: String?, due: Date?, remindme: Bool)
     func NoteUpdateCallBack()
     func deleteNote(note: Notes)
 }
 
+/// Protocol for Callback Function to move Notes
 protocol NoteMove {
     func moveNotes(to category: Categories)
 }
@@ -58,6 +60,10 @@ class NotesListViewController: UIViewController{
         showSearchBar()
     }
     
+    /// Function that checks Authorization for Event Use
+    /// - Parameters:
+    ///   - title: Title for the Event
+    ///   - date: Date of the Event
     func addEvent(title: String, date: Date)
     {
         let eventStore = EKEventStore()
@@ -80,6 +86,7 @@ class NotesListViewController: UIViewController{
         }
     }
     
+    /// Sets the number of notes in label at the bottom of the screen
     func setNumberOfNotes()
     {
         if mNotes.count == 1
@@ -92,6 +99,7 @@ class NotesListViewController: UIViewController{
         }
     }
     
+    /// Adds the Scretchy Header with Image
     func addNewView()
     {
         let headerView = StretchyTableHeaderView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 250))
@@ -99,6 +107,7 @@ class NotesListViewController: UIViewController{
         self.mTableView.tableHeaderView = headerView
     }
     
+    /// Loads All Notes for selected category in memory
     func loadNotes() {
         mNotes = []
         let request: NSFetchRequest<Notes> = Notes.fetchRequest()
@@ -125,6 +134,10 @@ class NotesListViewController: UIViewController{
         }
     }
     
+    /// Loads All Notes with certain conditions for selected category in memory
+    /// - Parameters:
+    ///   - request: NSFetchRequest to fetch the data from Core Date
+    ///   - predicate: Predicates to be applied on the Fetch Request
     func loadNotes(with request: NSFetchRequest<Notes> = Notes.fetchRequest(), predicate: NSCompoundPredicate) {
         mNotes = []
         let categoryPredicate = NSPredicate(format: "parentCategory.category= %@", mSelectedCategory!.category!)
@@ -171,38 +184,35 @@ class NotesListViewController: UIViewController{
         }
     }
     
+    /// Called when this View Controller is about to appear
+    /// - Parameter animated: tells if the appearance is going to be animate
     override func viewWillAppear(_ animated: Bool) {
         
         super.viewWillAppear(animated)
-        
-        // Make sure the top constraint of the TableView/CollectionView/ScrollView is equal to Superview and not Safe Area
         mNavigationBarShadowImage = self.navigationController?.navigationBar.shadowImage
         mNavigationBarIsTranslucent = self.navigationController?.navigationBar.isTranslucent
         mNavigationBarTintColor = self.navigationController?.navigationBar.tintColor
-        // Make the Navigation Bar background transparent
         self.navigationController?.navigationBar.backgroundColor = .clear
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.navigationBar.tintColor = .white
-        
-        // Remove 'Back' text and Title from Navigation Bar
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         mNavigationTextAttributes = self.navigationController?.navigationBar.largeTitleTextAttributes
         self.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         mSelectedNote = nil
-        
-        //        loadNotes()
-        //        mTableView.reloadData()
     }
     
+    /// Called when this View Controller is about to disappear
+    /// - Parameter animated: tells if the disappearance is going to be animate
     override func viewWillDisappear(_ animated: Bool) {
         self.navigationController?.navigationBar.shadowImage = mNavigationBarShadowImage
         self.navigationController?.navigationBar.isTranslucent = mNavigationBarIsTranslucent
         self.navigationController?.navigationBar.tintColor = mNavigationBarTintColor
         self.navigationController?.navigationBar.largeTitleTextAttributes = mNavigationTextAttributes
-        
     }
     
+    /// Action Function for Move To Button. Adds Selected Rows in a array and shows the MoveToViewController
+    /// - Parameter sender: Move To Button
     @IBAction func moveToTapped(_ sender: Any) {
         mSelectedNotes.removeAll()
         if let indexes = mTableView.indexPathsForSelectedRows
@@ -222,6 +232,8 @@ class NotesListViewController: UIViewController{
         }
     }
     
+    /// Action Function for Edit and Done Button. Toggles TableView between editing and not editing mode
+    /// - Parameter sender: <#sender description#>
     @IBAction func mEditButtonTapped(_ sender: Any) {
         if mTableView.isEditing
         {
@@ -241,6 +253,8 @@ class NotesListViewController: UIViewController{
         }
     }
     
+    /// Action Function for the Delete Button. Shows Confirmation Alert to delete the notes, if confirmed then deletes them
+    /// - Parameter sender: Delete Button
     @IBAction func mDeleteButtontapped(_ sender: Any) {
         let alert = UIAlertController(title: "Are you sure you want to delete?", message: nil, preferredStyle: .alert)
         let cancel_button = UIAlertAction(title: "Cancel", style: .cancel) { (UIAlertAction) in
@@ -274,6 +288,7 @@ class NotesListViewController: UIViewController{
         present(alert, animated: true, completion: nil)
     }
     
+    /// Saves the CoreData Data with Context
     func save() {
         do {
             try mContext.save()
@@ -284,8 +299,8 @@ class NotesListViewController: UIViewController{
         }
     }
     
+    /// Adds Search Bar in Navigation bar
     func showSearchBar() {
-        
         mSearchController.obscuresBackgroundDuringPresentation = false
         mSearchController.searchBar.placeholder = "Search Notes"
         navigationItem.searchController = mSearchController
@@ -294,6 +309,11 @@ class NotesListViewController: UIViewController{
         definesPresentationContext = true
     }
     
+    /// Adds Events in Calendar
+    /// - Parameters:
+    ///   - store: EventStore to get Calendar
+    ///   - title: Title of the Event
+    ///   - date: Date of the Event
     func insertEvent(store: EKEventStore, title: String, date: Date) {
         let calendars = store.calendars(for: .event)
         
@@ -316,6 +336,8 @@ class NotesListViewController: UIViewController{
         }
     }
     
+    /// Action Function for Sort Button. It toggles between Title ASC, Title DESC, Date ASC, Date DESC
+    /// - Parameter sender: Sort Button
     @IBAction func sortTapped(_ sender: UIBarButtonItem)
     {
         if sender.tag == 0
@@ -398,7 +420,11 @@ class NotesListViewController: UIViewController{
     }
 }
 
-extension NotesListViewController: UIScrollViewDelegate {
+/// Extension to take control of Scrolling
+extension NotesListViewController: UIScrollViewDelegate
+{
+    /// Called when Scroll View is scrolled. Used to change the tint and text color of navigation bar
+    /// - Parameter scrollView: ScrollView that is being scrolled
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let headerView = self.mTableView.tableHeaderView as! StretchyTableHeaderView
         headerView.scrollViewDidScroll(scrollView: scrollView)
@@ -415,14 +441,21 @@ extension NotesListViewController: UIScrollViewDelegate {
     }
 }
 
+/// Extension for Search bar delegate
 extension NotesListViewController: UISearchBarDelegate {
     
+    /// Called when the Search Button is clicked. Used to narrow the notes and reload table data
+    /// - Parameter searchBar: Search bar for which this function is being called
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
         let descpredicate = NSPredicate(format: "desc CONTAINS[cd] %@", searchBar.text!)
         loadNotes(predicate: NSCompoundPredicate(orPredicateWithSubpredicates: [predicate,descpredicate]))
     }
     
+    /// Called when text in search bar changes. Used to load all the notes in memory and reload table data when search bar is empty
+    /// - Parameters:
+    ///   - searchBar: Search Bar Object for which the text is changed
+    ///   - searchText: Current text in search bar
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text?.count == 0
         {
@@ -434,6 +467,8 @@ extension NotesListViewController: UISearchBarDelegate {
         }
     }
     
+    /// Called when cancel button of search bar is clicked. Used to load all the notes in memory and reload table data
+    /// - Parameter searchBar: Search bar for which this function is being called
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         loadNotes()
         DispatchQueue.main.async {
@@ -443,8 +478,12 @@ extension NotesListViewController: UISearchBarDelegate {
     }
 }
 
+/// Extension for Note Call Back Functions
 extension NotesListViewController: NoteCallBack
 {
+    
+    /// Function to delete a particular Note
+    /// - Parameter note: Note to be deleted
     func deleteNote(note: Notes) {
         mNotes.removeAll { (Notes) -> Bool in
             return Notes == note
@@ -456,6 +495,12 @@ extension NotesListViewController: NoteCallBack
         mContext.delete(note)
     }
     
+    /// Function to add a Note
+    /// - Parameters:
+    ///   - title: Title of the Note
+    ///   - description: Description of the Note (optional)
+    ///   - due: Due Date for the Note (optional)
+    ///   - remindme: if the user has to be reminded or not
     func NoteAddCallBack(title: String, description: String?, due: Date?, remindme: Bool) {
         let note = Notes(context: mContext)
         note.title = title
@@ -473,6 +518,7 @@ extension NotesListViewController: NoteCallBack
         mTableView.reloadData()
     }
     
+    /// Function to update a note in CoreData
     func NoteUpdateCallBack() {
         if let cond = mSelectedNote?.completed, cond
         {
@@ -482,12 +528,21 @@ extension NotesListViewController: NoteCallBack
     }
 }
 
+/// Extension for Table View Data Source and Table View Delegate
 extension NotesListViewController:  UITableViewDataSource, UITableViewDelegate
 {
+    /// Function to get number of sections
+    /// - Parameter tableView: TableView for which this
+    /// - Returns: number of sections
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
     
+    /// <#Description#>
+    /// - Parameters:
+    ///   - tableView: <#tableView description#>
+    ///   - section: <#section description#>
+    /// - Returns: <#description#>
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return UITableView.automaticDimension
     }

@@ -135,31 +135,14 @@ class NoteDetailsViewController: UIViewController, UIPopoverPresentationControll
             vc.mDateCallBack = self
             self.present(vc, animated: true, completion: nil)
         }
-        //        popover.barButtonItem = sender
-        
-//        present(vc, animated: true, completion:nil)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        
     }
     
     @IBAction func deletetapped(_ sender: Any) {
         mNoteCallBack.deleteNote(note: mSelectedNote!)
         navigationController?.popViewController(animated: true)
     }
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
     
     func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
-        print("hello")
         return .none
     }
     
