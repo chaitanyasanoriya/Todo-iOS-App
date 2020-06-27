@@ -24,6 +24,7 @@ class MoveToViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
+    /// Function to load all categories in memory and to present
     func loadCategories()
     {
         let request: NSFetchRequest<Categories> = Categories.fetchRequest()
@@ -35,28 +36,31 @@ class MoveToViewController: UIViewController {
         }
     }
     
-
+    
+    /// Action Function for Cancel Button. Dismisses this view
+    /// - Parameter sender: Cancel button
     @IBAction func cancelTapped(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
 
 extension MoveToViewController: UITableViewDelegate, UITableViewDataSource
 {
+    /// Sets the number of rows in a section
+    /// - Parameters:
+    ///   - tableView: TableView for which this function is being called
+    ///   - section: Index of Section
+    /// - Returns: Number of rows in this section
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return mCategories.count
     }
     
+    /// Gives the TableView cell for each indexpath
+    /// - Parameters:
+    ///   - tableView: TableView for which this function is being called
+    ///   - indexPath: IndexPath for the Cell
+    /// - Returns: Cell for IndexPath
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell")
         if cell == nil
@@ -71,11 +75,21 @@ extension MoveToViewController: UITableViewDelegate, UITableViewDataSource
         return cell!
     }
     
+    /// Called when a Row of Table View is Selected / Tapped
+    /// - Parameters:
+    ///   - tableView: Table View whose row is tapped
+    ///   - indexPath: IndexPath of the row tapped
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         mNoteMove?.moveNotes(to: mCategories[indexPath.row])
         dismiss(animated: true, completion: nil)
     }
     
+    
+    /// Function to set if a row is selectable. Sets Original Category to be non selectable
+    /// - Parameters:
+    ///   - tableView: TableView for which this function is being called
+    ///   - indexPath: indexpath of the row for which this function is called
+    /// - Returns: IndexPath of selectable rows
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if mOriginalCategory === mCategories[indexPath.row]
         {
@@ -84,6 +98,11 @@ extension MoveToViewController: UITableViewDelegate, UITableViewDataSource
         return indexPath
     }
     
+    /// Function to set if a row can be highlighted when tapped. Sets Original Category to be non Highlightable
+    /// - Parameters:
+    ///   - tableView: TableView for which this function is being called
+    ///   - indexPath: indexpath of the row for which this function is called
+    /// - Returns: if row at this indexpath is highlightable
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
         if mOriginalCategory === mCategories[indexPath.row]
         {

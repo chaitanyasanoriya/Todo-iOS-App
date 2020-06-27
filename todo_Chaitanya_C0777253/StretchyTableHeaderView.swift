@@ -31,6 +31,7 @@ class StretchyTableHeaderView: UIView {
         super.init(coder: aDecoder)
     }
     
+    /// Function to create views
     func createViews() {
         // Container View
         containerView = UIView()
@@ -44,6 +45,7 @@ class StretchyTableHeaderView: UIView {
         containerView.addSubview(imageView)
     }
     
+    /// Function to set constraints
     func setViewConstraints() {
         // UIView Constraints
         NSLayoutConstraint.activate([
@@ -67,6 +69,8 @@ class StretchyTableHeaderView: UIView {
         imageViewHeight.isActive = true
     }
     
+    /// Function Call when view scrolled
+    /// - Parameter scrollView: View being Scrolled
     func scrollViewDidScroll(scrollView: UIScrollView) {
         containerViewHeight.constant = scrollView.contentInset.top
         let offsetY = -(scrollView.contentOffset.y + scrollView.contentInset.top)

@@ -38,6 +38,8 @@ class NoteDetailsViewController: UIViewController, UIPopoverPresentationControll
         // Do any additional setup after loading the view.
     }
     
+    /// Action Function  to Save or Update a note. Also performs Validations
+    /// - Parameter sender: Save Button
     @IBAction func saveTapped(_ sender: Any) {
         var no_prob = false
         let title = mTitleTextField.text
@@ -87,6 +89,11 @@ class NoteDetailsViewController: UIViewController, UIPopoverPresentationControll
         }
     }
     
+    /// Function to check if remind me is true and if so then due date is set
+    /// - Parameters:
+    ///   - remindme: if remind me is true
+    ///   - date: due date
+    /// - Returns: check if remind me is true and if so then due date is set
     func checkReminder(remindme: Bool, date: Date?) -> Bool
     {
         if remindme, date != nil
@@ -101,6 +108,7 @@ class NoteDetailsViewController: UIViewController, UIPopoverPresentationControll
         return false
     }
     
+    /// Function to set Selected Note Data
     func setData()
     {
         mTitleTextField.text = mSelectedNote?.title
@@ -117,11 +125,16 @@ class NoteDetailsViewController: UIViewController, UIPopoverPresentationControll
         }
     }
     
+    /// Action Function for Complete Button. User completed a task
+    /// - Parameter sender: Completed Button
     @IBAction func completedTapped(_ sender: Any) {
         mSelectedNote?.completed = !mSelectedNote!.completed
         mNoteCallBack.NoteUpdateCallBack()
         navigationController?.popViewController(animated: true)
     }
+    
+    /// Action Function for Add Due Date Button. Shows a Pop Over View to select a date
+    /// - Parameter sender: Add Due Date Button
     @IBAction func addDueDateButtonTapped(_ sender: Any) {
         let storyboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "DatePopOverViewController") as! DatePopOverViewController
@@ -137,15 +150,26 @@ class NoteDetailsViewController: UIViewController, UIPopoverPresentationControll
         }
     }
     
+    /// Action Function for Delete Button. To delete a Note
+    /// - Parameter sender: Delete Button
     @IBAction func deletetapped(_ sender: Any) {
         mNoteCallBack.deleteNote(note: mSelectedNote!)
         navigationController?.popViewController(animated: true)
     }
     
+    /// Function to set the Presentation style of PopOverView
+    /// - Parameters:
+    ///   - controller: Controller for which this function is being called for
+    ///   - traitCollection: TraitCollection
+    /// - Returns: Presentation style
     func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
         return .none
     }
     
+    /// Function to show Alert
+    /// - Parameters:
+    ///   - title: title of alert
+    ///   - message: message of alert
     func showAlert(title: String, message: String?)
     {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -157,18 +181,24 @@ class NoteDetailsViewController: UIViewController, UIPopoverPresentationControll
     }
 }
 
+/// Protocol for date changed Callback function
 protocol DateCallBack {
     func dateChanged(date: Date)
 }
 
+/// Extension for Date Change Callback
 extension NoteDetailsViewController: DateCallBack
 {
+    /// When Due Date changed
+    /// - Parameter date: due date
     func dateChanged(date: Date) {
         mDueDate = date
-        
         self.mDueDateButton.setTitle(formattedDate(date: date), for: .normal)
     }
     
+    /// Function to format date in a more user friendly manner
+    /// - Parameter date: date to be formatted
+    /// - Returns: formatted date
     func formattedDate(date: Date) -> String
     {
         let dateFormatter = DateFormatter()
@@ -178,6 +208,7 @@ extension NoteDetailsViewController: DateCallBack
     }
 }
 
+/// Class for Due Date PopOverView
 class DatePopOverViewController: UIViewController
 {
     var mDateCallBack: DateCallBack!
@@ -198,10 +229,14 @@ class DatePopOverViewController: UIViewController
         self.view.addSubview(picker)
     }
     
+    /// Function Call when Date Picker value changes
+    /// - Parameter sender: Date Picker
     @objc func dueDateChanged(sender:UIDatePicker){
         mDateCallBack.dateChanged(date: sender.date)
     }
     
+    /// Action Function for Done Button, sets last selected date as due date
+    /// - Parameter sender: Done Button
     @IBAction func doneButtonTapped(_ sender: Any) {
         mDateCallBack.dateChanged(date: picker.date)
         dismiss(animated: true, completion: nil)

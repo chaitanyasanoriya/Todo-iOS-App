@@ -223,6 +223,7 @@ class ViewController: UITableViewController {
     }
 }
 
+/// Extension for Search bar delegate
 extension ViewController: UISearchBarDelegate {
     
     /// Called when Search button or return is tapped. Used to narrow the categories and reload table data
@@ -260,9 +261,10 @@ extension ViewController: UISearchBarDelegate {
     }
 }
 
-
+/// Extension for Popover Presentation Controller Delegate
 extension ViewController: UIPopoverPresentationControllerDelegate
 {
+    /// Showing Note Due View Controller as PopOver
     func showDueDateViewController()
     {
         let storyboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
@@ -279,14 +281,20 @@ extension ViewController: UIPopoverPresentationControllerDelegate
         }
     }
     
+    /// Function to set the Presentation style of PopOverView
+    /// - Parameters:
+    ///   - controller: Controller for which this function is being called for
+    ///   - traitCollection: TraitCollection
+    /// - Returns: Presentation style
     func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
         return .none
     }
 }
 
-
+/// Extension to Load Notes for Due Date Notification
 extension ViewController
 {
+    /// Function to load notes in memory
     func loadNotes()
     {
         let request: NSFetchRequest<Notes> = Notes.fetchRequest()
@@ -299,6 +307,7 @@ extension ViewController
         setupNotes()
     }
     
+    /// Function to set notes which have a due date tomorrow
     func setupNotes()
     {
         for note in mNotes

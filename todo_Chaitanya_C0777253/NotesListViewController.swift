@@ -532,21 +532,26 @@ extension NotesListViewController: NoteCallBack
 extension NotesListViewController:  UITableViewDataSource, UITableViewDelegate
 {
     /// Function to get number of sections
-    /// - Parameter tableView: TableView for which this
+    /// - Parameter tableView: TableView for which this function is called for
     /// - Returns: number of sections
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
     
-    /// <#Description#>
+    /// Function to set dimensions of footer for a section
     /// - Parameters:
-    ///   - tableView: <#tableView description#>
-    ///   - section: <#section description#>
-    /// - Returns: <#description#>
+    ///   - tableView: TableView for which this function is called for
+    ///   - section: section for which this function is called for
+    /// - Returns: dimension of footer
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return UITableView.automaticDimension
     }
     
+    /// Function to set number of rows in a section
+    /// - Parameters:
+    ///   - tableView: TableView for which this function is called for
+    ///   - section: section for which this function is called for
+    /// - Returns: number of rows
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0
         {
@@ -559,6 +564,11 @@ extension NotesListViewController:  UITableViewDataSource, UITableViewDelegate
         }
     }
     
+    /// Function to set cell for an indexpath
+    /// - Parameters:
+    ///   - tableView: TableView for which this function is called for
+    ///   - indexPath: IndexPath of row
+    /// - Returns: Cell for the indexpath
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell")
         if cell == nil
@@ -593,6 +603,10 @@ extension NotesListViewController:  UITableViewDataSource, UITableViewDelegate
         return cell!
     }
     
+    /// Function to add functionality to row select, called to not select if tablview in editing or perform segue with if tableview not in editing
+    /// - Parameters:
+    ///   - tableView: TableView for which this function is called for
+    ///   - indexPath: indexpath of row selected / tapped
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if !mIsEditing
         {
@@ -608,6 +622,11 @@ extension NotesListViewController:  UITableViewDataSource, UITableViewDelegate
         }
     }
     
+    /// Function to set the Header name of the section
+    /// - Parameters:
+    ///   - tableView: TableView for which this function is called for
+    ///   - section: index of section
+    /// - Returns: Name of section (optional)
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 1, mCompletedNotes.count > 0
         {
@@ -616,6 +635,11 @@ extension NotesListViewController:  UITableViewDataSource, UITableViewDelegate
         return nil
     }
     
+    /// Function to Add Swipe to delete functionality
+    /// - Parameters:
+    ///   - tableView: TableView for which this function is called for
+    ///   - editingStyle: editing style that is being performed
+    ///   - indexPath: indexpath of row being edited
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let note: Notes
@@ -633,6 +657,11 @@ extension NotesListViewController:  UITableViewDataSource, UITableViewDelegate
         }
     }
     
+    /// Function to add Swipe to move and Add Day Functionality (Swipe left to right)
+    /// - Parameters:
+    ///   - tableView: TableView for which this function is called for
+    ///   - indexPath: Indexpath of the row being edited
+    /// - Returns: Actions that can be performed
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let moveNote = UIContextualAction(style: .normal, title: "Move") { (action, view, completion) in
             self.mSelectedNotes.removeAll()
@@ -664,6 +693,8 @@ extension NotesListViewController:  UITableViewDataSource, UITableViewDelegate
         return UISwipeActionsConfiguration(actions: [moveNote, addDate])
     }
     
+    /// Function to set the Color of the cell when updated
+    /// - Parameter indexpath: Indexpath of the updated cell
     func cellProperColor(indexpath: IndexPath)
     {
         let cell = mTableView.cellForRow(at: indexpath)
@@ -688,8 +719,12 @@ extension NotesListViewController:  UITableViewDataSource, UITableViewDelegate
     }
 }
 
+
+/// Extension to add Move Note Functionality
 extension NotesListViewController: NoteMove
 {
+    /// Function to move selected notes to a particular activity
+    /// - Parameter category: Category to move notes to
     func moveNotes(to category: Categories) {
         for note in mSelectedNotes
         {
