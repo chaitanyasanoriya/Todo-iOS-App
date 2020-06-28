@@ -69,9 +69,9 @@ Swipe to Add a day to Note:
 <br/><br/>
 Notification of Due Notes Notes:
 <br/>
-![Notification at App Startup](screenshots/notify.gif)
-&emsp; &emsp;
-![Notification through Calendar](screenshots/addNote1.gif)
+Notification at Startup | Notification Through Calendar | Notification Through Push Notification
+------------ | ------------ | ------------
+![Notification at App Startup](screenshots/notify.gif) | ![Notification through Calendar](screenshots/addNote1.gif) | ![Notification Through Push Notification](screenshots/notify2.png)
 
 <br/><br/>
 Search Categories and Notes:
