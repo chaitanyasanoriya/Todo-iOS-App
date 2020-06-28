@@ -17,6 +17,7 @@
 		90151EAE24A1AD9600AAFAB0 /* NotesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90151EAD24A1AD9600AAFAB0 /* NotesListViewController.swift */; };
 		9055CF9724A280000089251C /* StretchyTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9055CF9624A280000089251C /* StretchyTableHeaderView.swift */; };
 		907F264724A6E71A00A2B2C8 /* NoteDueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907F264624A6E71A00A2B2C8 /* NoteDueViewController.swift */; };
+		908FC89A24A8383400711040 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 908FC89824A8383400711040 /* logo.png */; };
 		90F66C0124A3D586000C7CFD /* NoteDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90F66C0024A3D586000C7CFD /* NoteDetailsViewController.swift */; };
 		90F66C2324A64C83000C7CFD /* MoveToViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90F66C2224A64C83000C7CFD /* MoveToViewController.swift */; };
 /* End PBXBuildFile section */
@@ -34,6 +35,7 @@
 		90151EAD24A1AD9600AAFAB0 /* NotesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesListViewController.swift; sourceTree = "<group>"; };
 		9055CF9624A280000089251C /* StretchyTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StretchyTableHeaderView.swift; sourceTree = "<group>"; };
 		907F264624A6E71A00A2B2C8 /* NoteDueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDueViewController.swift; sourceTree = "<group>"; };
+		908FC89824A8383400711040 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = SOURCE_ROOT; };
 		90F66C0024A3D586000C7CFD /* NoteDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDetailsViewController.swift; sourceTree = "<group>"; };
 		90F66C2224A64C83000C7CFD /* MoveToViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveToViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -68,6 +70,7 @@
 		9001D1D724A1455E00A7C419 /* todo_Chaitanya_C0777253 */ = {
 			isa = PBXGroup;
 			children = (
+				908FC89824A8383400711040 /* logo.png */,
 				9001D1D824A1455E00A7C419 /* AppDelegate.swift */,
 				9001D1DA24A1455E00A7C419 /* SceneDelegate.swift */,
 				9001D1DC24A1455E00A7C419 /* ViewController.swift */,
@@ -144,6 +147,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9001D1E824A1456000A7C419 /* LaunchScreen.storyboard in Resources */,
+				908FC89A24A8383400711040 /* logo.png in Resources */,
 				9001D1E524A1456000A7C419 /* Assets.xcassets in Resources */,
 				9001D1E024A1455E00A7C419 /* Main.storyboard in Resources */,
 			);

@@ -30,6 +30,7 @@ class ViewController: UITableViewController {
         // Do any additional setup after loading the view.
         loadCategories()
         showSearchBar()
+        setupNotification()
         loadNotes()
     }
     
@@ -310,16 +311,31 @@ extension ViewController
     /// Function to set notes which have a due date tomorrow
     func setupNotes()
     {
+        var assignments: String = ""
         for note in mNotes
         {
             if  let date = note.date, Calendar.current.isDate(mCurrentDate.addingTimeInterval(24*60*60), equalTo: date, toGranularity: .day)
             {
                 mNotesString.append(note.title!)
+                assignments.append(note.title! + "\n")
             }
         }
         if mNotesString.count != 0
         {
             showDueDateViewController()
+        }
+    }
+    
+    /// Function to get User Permission to show Notification
+    func setupNotification()
+    {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) {
+            (granted, error) in
+            if granted {
+                print("yes")
+            } else {
+                self.showAlert(title: "Alert Notification Denied", msg: "The Application requires Notification permission to notify when due date is arriving for a particular Note. Please allow this permission through settings, if you want to get notified")
+            }
         }
     }
 }

@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import EventKit
+import UserNotifications
 
 /// Protocol for Callback Functions to Add, Update and Delete a Note
 protocol NoteCallBack {
@@ -514,8 +515,49 @@ extension NotesListViewController: NoteCallBack
         if note.remindme, let date = note.date
         {
             addEvent(title: note.title!, date: date)
+            addNotification(title: note.title!, description: note.desc, date: date)
         }
         mTableView.reloadData()
+    }
+    
+    /// Adds a Notification to be presented a day before due date
+    /// - Parameters:
+    ///   - title: Title of the Note
+    ///   - description: Description of the Note
+    ///   - date: Due Date of the Note
+    func addNotification(title: String, description: String?, date: Date)
+    {
+        dump(date)
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.subtitle = "Note Due Tomrrow"
+        if let desc = description
+        {
+            content.body = desc
+        }
+        else
+        {
+            content.body = formattedDate(date: date)
+        }
+        let imageName = "logo"
+        guard let imageURL = Bundle.main.url(forResource: imageName, withExtension: "png") else {return }
+        let attachment = try! UNNotificationAttachment(identifier: imageName, url: imageURL, options: .none)
+        content.attachments = [attachment]
+        let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date.addingTimeInterval(-24*60*60))
+        let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
+        let request = UNNotificationRequest(identifier: "notification.id.01", content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+    }
+    
+    /// Function to format date in a more user friendly manner
+    /// - Parameter date: date to be formatted
+    /// - Returns: formatted date
+    func formattedDate(date: Date) -> String
+    {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = DateFormatter.Style.long
+        dateFormatter.timeStyle = DateFormatter.Style.none
+        return dateFormatter.string(from: date)
     }
     
     /// Function to update a note in CoreData
