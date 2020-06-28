@@ -30,7 +30,7 @@ Adding Note:
 <br/>
 Basic Note | Note with Details | Details
 ------------ | ------------- | -------------
-![Adding Note](screenshots/addNote.gif) | ![Adding Note with Details](screenshots/addNote1.gif) |  The Application adds Note as an Reminder in Calendar, to notify the User a day before. <br/> The Application on startup also shows the due notes if any.
+![Adding Note](screenshots/addNote.gif) | ![Adding Note with Details](screenshots/addNote1.gif) |  The Application adds Note as an Reminder in Calendar, to notify the User a day before. <br/> The Application on startup also shows the due notes if any. <br/> The Application also sends a Push Notification to User a day before the Note is due.
 
 <br/><br/>
 Note Colors:
